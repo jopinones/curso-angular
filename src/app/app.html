@@ -1,2 +1,18 @@
+<div class="layout">
+    <aside class="menu-lateral">
+        <h1>Portal</h1>
+        
+        <nav>
+            <a routerLink="/" routerLinkActive="activo" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+            <a routerLink="/bandeja" routerLinkActive="activo" >Bandeja</a>
+            <a routerLink="/reportes" routerLinkActive="activo" >Reportes</a>
+            <a routerLink="/acerca" routerLinkActive="activo" >Acerca de</a>
+        </nav>
+    </aside>
 
-<app-bandeja />
+    <main class="contenido">
+        <router-outlet></router-outlet>
+    </main>
+
+
+</div>

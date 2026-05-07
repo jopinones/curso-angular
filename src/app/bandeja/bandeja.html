@@ -18,6 +18,13 @@
             <option value="Finalizado">Finalizado</option>
         </select>
 
+        <select [(ngModel)]="nuevoExpediente.prioridad" class="form-select">
+            <option value="">Seleccione prioridad</option>
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+        </select>
+
         <input
             type="date"
             class="form-control"
@@ -32,6 +39,7 @@
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Estado</th>
+                    <th>Prioridad</th>
                     <th>Fecha de creación</th>
                     <th>Acción</th>
                 </tr>
@@ -42,6 +50,11 @@
                         <td>{{ expediente.id }}</td>
                         <td>{{ expediente.nombre }}</td>
                         <td>{{ expediente.estado }}</td>
+                        <td>
+                        <span class="badge" [ngClass]="{'alta': expediente.prioridad === 'Alta', 'media': expediente.prioridad === 'Media', 'baja': expediente.prioridad === 'Baja'}">
+                            {{ expediente.prioridad }}
+                        </span>
+                        </td>
                         <td>{{ expediente.fechaCreacion }}</td>
                         <td><button type="button" class="btn btn-danger" (click)="eliminarExpediente(expediente.id)">Eliminar</button></td>
                     </tr>

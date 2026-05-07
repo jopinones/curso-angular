@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Expediente } from '../../models/expediente';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-bandeja',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './bandeja.html',
   styleUrl: './bandeja.css',
 })
@@ -15,6 +16,7 @@ export class Bandeja implements OnInit{
     id: 0,
     nombre: '',
     estado: '',
+    prioridad: '',
     fechaCreacion: ''
   }
 
@@ -29,12 +31,14 @@ export class Bandeja implements OnInit{
           id: 1,
           nombre: 'Fiscalización',
           estado: 'Pendiente',
+          prioridad: 'Alta',
           fechaCreacion: '02/05/2026'
         },
         {
           id: 2,
           nombre: 'Revisión',
           estado: 'Pendiente',
+          prioridad: 'Media',
           fechaCreacion: '04/05/2026'
         }
       ];
@@ -54,6 +58,7 @@ export class Bandeja implements OnInit{
       id: Date.now(),
       nombre: this.nuevoExpediente.nombre,
       estado: this.nuevoExpediente.estado,
+      prioridad: this.nuevoExpediente.prioridad,
       fechaCreacion: this.nuevoExpediente.fechaCreacion, 
     };
 
@@ -72,6 +77,7 @@ export class Bandeja implements OnInit{
       id: 0,
       nombre: '',
       estado: '',
+      prioridad: '',
       fechaCreacion: '',
     };
   }
