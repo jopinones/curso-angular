@@ -1,0 +1,36 @@
+.contenedor {
+    max-width: 800px;
+    margin: 20px auto;
+    font-family: Arial, Helvetica, sans-serif;
+}
+button {
+        border: 0;
+        border-radius: 14px;
+        padding: 0.9rem 1.2rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+input {
+    margin: 1px;
+    padding: 0.85rem 1rem;
+}  
+select {
+    margin: 1px;
+    padding: 0.85rem 1rem;
+}
+table {
+    color: blue;
+}
+
+th,
+td {
+    padding: 0.9rem 0.75rem;
+    border-bottom: 1px solid #edf2f7;
+    text-align: left;
+    vertical-align: top;
+}
+th {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--text-soft);
+}

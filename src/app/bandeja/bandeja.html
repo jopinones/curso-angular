@@ -1,0 +1,53 @@
+<div class="contenedor">
+    <h1>Portal de Expedientes Electrónicos</h1>
+
+    <h2>Bandeja de Trabajo</h2>
+
+    <div class="formulario">
+        <input
+            type="text"
+            placeholder="Nombre del expediente"
+            class="form-control"
+            [(ngModel)]="nuevoExpediente.nombre"
+        >
+
+        <select [(ngModel)]="nuevoExpediente.estado" class="form-select">
+            <option value="">Seleccione un estado</option>
+            <option value="Pendiente">Pendiente</option>
+            <option value="En proceso">En proceso</option>
+            <option value="Finalizado">Finalizado</option>
+        </select>
+
+        <input
+            type="date"
+            class="form-control"
+            [(ngModel)] = "nuevoExpediente.fechaCreacion"
+        >
+
+        <button type="button" class="btn btn-primary"  (click)="agregarExpediente()">Agregar Expediente</button>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Estado</th>
+                    <th>Fecha de creación</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (expediente of expedientes; track expediente.id){
+                    <tr>
+                        <td>{{ expediente.id }}</td>
+                        <td>{{ expediente.nombre }}</td>
+                        <td>{{ expediente.estado }}</td>
+                        <td>{{ expediente.fechaCreacion }}</td>
+                        <td><button type="button" class="btn btn-danger" (click)="eliminarExpediente(expediente.id)">Eliminar</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
