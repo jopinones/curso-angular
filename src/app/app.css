@@ -8,6 +8,8 @@
     width: 240px;
     background-color: black;
     color: white;
+    position: fixed;
+    height: 100vh;
     padding: 24px;
 }
 
@@ -44,28 +46,3 @@
     background-color: #f3f4f6;
 }
 
-.badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  color: black;
-  font-weight: bold;
-  display: inline-block;
-  min-width: 80px;
-  text-align: center;
-}
-
-/* ROJO */
-.alta {
-  background-color: #dc2626;
-}
-
-/* AMARILLO */
-.media {
-  background-color: #facc15;
-  color: black;
-}
-
-/* VERDE */
-.baja {
-  background-color: #16a34a;
-}
