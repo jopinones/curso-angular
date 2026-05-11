@@ -42,7 +42,9 @@
 
 .contenido {
     flex: 1;
+    margin-left: 240px;
     padding: 30px;
     background-color: #f3f4f6;
+    min-width: 0;
 }
 

@@ -9,49 +9,54 @@ import { CommonModule } from '@angular/common';
   templateUrl: './bandeja.html',
   styleUrl: './bandeja.css',
 })
-export class Bandeja implements OnInit{
-  expedientes: Expediente[] = []; 
-  
+export class Bandeja implements OnInit {
+  expedientes: Expediente[] = [];
+  idEditando: number | null = null;
+  expedienteEditando: Expediente = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '' };
+
   nuevoExpediente: Expediente = {
     id: 0,
     nombre: '',
     estado: '',
     prioridad: '',
-    fechaCreacion: ''
-  }
+    fechaCreacion: '',
+  };
 
   ngOnInit() {
     const data = localStorage.getItem('expedientes');
-
     if (data) {
-      this.expedientes = JSON.parse(data);      
+      this.expedientes = JSON.parse(data);
     } else {
       this.expedientes = [
-        {
-          id: 1,
-          nombre: 'Fiscalización',
-          estado: 'Pendiente',
-          prioridad: 'Alta',
-          fechaCreacion: '02/05/2026'
-        },
-        {
-          id: 2,
-          nombre: 'Revisión',
-          estado: 'Pendiente',
-          prioridad: 'Media',
-          fechaCreacion: '04/05/2026'
-        }
+        { id: 1, nombre: 'Fiscalización', estado: 'Pendiente', prioridad: 'Alta', fechaCreacion: '02/05/2026' },
+        { id: 2, nombre: 'Revisión', estado: 'Pendiente', prioridad: 'Media', fechaCreacion: '04/05/2026' },
       ];
     }
   }
 
-  agregarExpediente() {
-    if (!this.nuevoExpediente.nombre ||
-        !this.nuevoExpediente.estado ||
-        !this.nuevoExpediente.fechaCreacion) {
-          alert('Debe completar todos los datos');
+  iniciarEdicion(expediente: Expediente) {
+    this.idEditando = expediente.id;
+    this.expedienteEditando = { ...expediente };
+  }
 
-          return;
+  guardarEdicion() {
+    const index = this.expedientes.findIndex(e => e.id === this.idEditando);
+    if (index !== -1) {
+      this.expedientes[index] = { ...this.expedienteEditando };
+    }
+    this.guardarLocalStorage();
+    this.cancelarEdicion();
+  }
+
+  cancelarEdicion() {
+    this.idEditando = null;
+    this.expedienteEditando = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '' };
+  }
+
+  agregarExpediente() {
+    if (!this.nuevoExpediente.nombre || !this.nuevoExpediente.estado || !this.nuevoExpediente.fechaCreacion) {
+      alert('Debe completar todos los datos');
+      return;
     }
 
     const expediente: Expediente = {
@@ -59,7 +64,7 @@ export class Bandeja implements OnInit{
       nombre: this.nuevoExpediente.nombre,
       estado: this.nuevoExpediente.estado,
       prioridad: this.nuevoExpediente.prioridad,
-      fechaCreacion: this.nuevoExpediente.fechaCreacion, 
+      fechaCreacion: this.nuevoExpediente.fechaCreacion,
     };
 
     this.expedientes.push(expediente);
@@ -71,15 +76,9 @@ export class Bandeja implements OnInit{
     this.expedientes = this.expedientes.filter(e => e.id !== id);
     this.guardarLocalStorage();
   }
-  
+
   limpiarFormulario() {
-    this.nuevoExpediente = {
-      id: 0,
-      nombre: '',
-      estado: '',
-      prioridad: '',
-      fechaCreacion: '',
-    };
+    this.nuevoExpediente = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '' };
   }
 
   guardarLocalStorage() {

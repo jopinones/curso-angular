@@ -28,10 +28,10 @@
         <input
             type="date"
             class="form-control"
-            [(ngModel)] = "nuevoExpediente.fechaCreacion"
+            [(ngModel)]="nuevoExpediente.fechaCreacion"
         >
 
-        <button type="button" class="btn btn-primary"  (click)="agregarExpediente()">Agregar Expediente</button>
+        <button type="button" class="btn btn-primary" (click)="agregarExpediente()">Agregar Expediente</button>
 
         <table class="table table-striped">
             <thead>
@@ -45,22 +45,58 @@
                 </tr>
             </thead>
             <tbody>
-                @for (expediente of expedientes; track expediente.id){
-                    <tr>
-                        <td>{{ expediente.id }}</td>
-                        <td>{{ expediente.nombre }}</td>
-                        <td>{{ expediente.estado }}</td>
-                        <td>
-                        <span class="badge" [ngClass]="{'alta': expediente.prioridad === 'Alta', 'media': expediente.prioridad === 'Media', 'baja': expediente.prioridad === 'Baja'}">
-                            {{ expediente.prioridad }}
-                        </span>
-                        </td>
-                        <td>{{ expediente.fechaCreacion }}</td>
-                        <td><button type="button" class="btn btn-danger" (click)="eliminarExpediente(expediente.id)">Eliminar</button></td>
-                    </tr>
+                @for (expediente of expedientes; track expediente.id) {
+                    @if (expediente.id === idEditando) {
+                        <tr class="fila-editando">
+                            <td>{{ expediente.id }}</td>
+                            <td>
+                                <input type="text" class="form-control input-celda" [(ngModel)]="expedienteEditando.nombre">
+                            </td>
+                            <td>
+                                <select class="form-select input-celda" [(ngModel)]="expedienteEditando.estado">
+                                    <option value="Pendiente">Pendiente</option>
+                                    <option value="En proceso">En proceso</option>
+                                    <option value="Finalizado">Finalizado</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-select input-celda" [(ngModel)]="expedienteEditando.prioridad">
+                                    <option value="Alta">Alta</option>
+                                    <option value="Media">Media</option>
+                                    <option value="Baja">Baja</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="date" class="form-control input-celda" [(ngModel)]="expedienteEditando.fechaCreacion">
+                            </td>
+                            <td class="acciones">
+                                <button type="button" class="btn btn-success" (click)="guardarEdicion()">Guardar</button>
+                                <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+                            </td>
+                        </tr>
+                    } @else {
+                        <tr>
+                            <td>{{ expediente.id }}</td>
+                            <td>{{ expediente.nombre }}</td>
+                            <td>{{ expediente.estado }}</td>
+                            <td>
+                                <span class="badge" [ngClass]="{
+                                    'alta': expediente.prioridad === 'Alta',
+                                    'media': expediente.prioridad === 'Media',
+                                    'baja': expediente.prioridad === 'Baja'
+                                }">
+                                    {{ expediente.prioridad }}
+                                </span>
+                            </td>
+                            <td>{{ expediente.fechaCreacion }}</td>
+                            <td class="acciones">
+                                <button type="button" class="btn btn-warning" (click)="iniciarEdicion(expediente)">Editar</button>
+                                <button type="button" class="btn btn-danger" (click)="eliminarExpediente(expediente.id)">Eliminar</button>
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>
-
     </div>
 </div>

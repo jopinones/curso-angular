@@ -59,3 +59,20 @@ th {
 .baja {
   background-color: #16a34a;
 }
+
+.acciones {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.fila-editando {
+  background-color: #fffbeb !important;
+}
+
+.input-celda {
+  padding: 4px 8px;
+  font-size: 0.875rem;
+  min-width: 100px;
+}
