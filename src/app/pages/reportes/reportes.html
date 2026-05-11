@@ -1,27 +1,20 @@
-<table>
-      <thead>
-        <tr>
-          <th>Indicador</th>
-          <th>Cantidad</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Total de expedientes</td>
-          <td class="numero">120</td>
-          <td>Total registrado</td>
-        </tr>
-        <tr>
-          <td>Expedientes pendientes</td>
-          <td class="numero pendiente">35</td>
-          <td>Pendiente de gestión</td>
-        </tr>
-        <tr>
-          <td>Expedientes finalizados</td>
-          <td class="numero finalizado">85</td>
-          <td>Proceso terminado</td>
-        </tr>
-      </tbody>
-</table>
+<div class="contenedor">
+  <h2>Reportes</h2>
 
+  <div class="cards-grid">
+    <div class="card-indicador card-total">
+      <div class="card-numero">{{ totalRegistrado }}</div>
+      <div class="card-etiqueta">Total Registrado</div>
+    </div>
+
+    <div class="card-indicador card-pendiente">
+      <div class="card-numero">{{ pendienteDeGestion }}</div>
+      <div class="card-etiqueta">Pendiente de gestión</div>
+    </div>
+
+    <div class="card-indicador card-finalizado">
+      <div class="card-numero">{{ procesoTerminado }}</div>
+      <div class="card-etiqueta">Proceso terminado</div>
+    </div>
+  </div>
+</div>
