@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { Expediente } from '../../models/expediente';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-bandeja',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './bandeja.html',
   styleUrl: './bandeja.css',
 })

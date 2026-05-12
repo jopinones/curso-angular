@@ -90,6 +90,7 @@
                             </td>
                             <td>{{ expediente.fechaCreacion }}</td>
                             <td class="acciones">
+                                <button class="btn btn-info" [routerLink]="['/expediente', expediente.id]">Ver Detalle</button>
                                 <button type="button" class="btn btn-warning" (click)="iniciarEdicion(expediente)">Editar</button>
                                 <button type="button" class="btn btn-danger" (click)="eliminarExpediente(expediente.id)">Eliminar</button>
                             </td>
