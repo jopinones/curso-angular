@@ -78,7 +78,13 @@
                         <tr>
                             <td>{{ expediente.id }}</td>
                             <td>{{ expediente.nombre }}</td>
-                            <td>{{ expediente.estado }}</td>
+                            <td>
+                                <span class="badge-estado" [ngClass]="{
+                                    'estado-pendiente': expediente.estado === 'Pendiente',
+                                    'estado-en-proceso': expediente.estado === 'En proceso',
+                                    'estado-finalizado': expediente.estado === 'Finalizado'
+                                }">{{ expediente.estado }}</span>
+                            </td>
                             <td>
                                 <span class="badge" [ngClass]="{
                                     'alta': expediente.prioridad === 'Alta',
@@ -90,6 +96,7 @@
                             </td>
                             <td>{{ expediente.fechaCreacion }}</td>
                             <td class="acciones">
+                                <button type="button" class="btn btn-secondary btn-estado" (click)="cambiarEstado(expediente.id)">Cambiar estado</button>
                                 <button class="btn btn-info" [routerLink]="['/expediente', expediente.id]">Ver Detalle</button>
                                 <button type="button" class="btn btn-warning" (click)="iniciarEdicion(expediente)">Editar</button>
                                 <button type="button" class="btn btn-danger" (click)="eliminarExpediente(expediente.id)">Eliminar</button>

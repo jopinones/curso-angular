@@ -15,6 +15,8 @@ export class Bandeja implements OnInit {
   idEditando: number | null = null;
   expedienteEditando: Expediente = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '' };
 
+  private readonly flujoEstados = ['Pendiente', 'En proceso', 'Finalizado'];
+
   nuevoExpediente: Expediente = {
     id: 0,
     nombre: '',
@@ -52,6 +54,14 @@ export class Bandeja implements OnInit {
   cancelarEdicion() {
     this.idEditando = null;
     this.expedienteEditando = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '' };
+  }
+
+  cambiarEstado(id: number) {
+    const expediente = this.expedientes.find(e => e.id === id);
+    if (!expediente) return;
+    const indiceActual = this.flujoEstados.indexOf(expediente.estado);
+    expediente.estado = this.flujoEstados[(indiceActual + 1) % this.flujoEstados.length];
+    this.guardarLocalStorage();
   }
 
   agregarExpediente() {

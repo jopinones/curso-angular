@@ -76,3 +76,33 @@ th {
   font-size: 0.875rem;
   min-width: 100px;
 }
+
+.badge-estado {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.estado-pendiente {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.estado-en-proceso {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.estado-finalizado {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.btn-estado {
+  font-size: 0.8rem;
+  padding: 0.4rem 0.75rem;
+  white-space: nowrap;
+}
