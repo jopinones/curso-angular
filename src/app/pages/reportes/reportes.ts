@@ -26,6 +26,10 @@ export class Reportes implements OnInit {
     return this.expedientes.filter(e => e.estado === 'Pendiente').length;
   }
 
+  get enProceso(): number {
+    return this.expedientes.filter(e => e.estado === 'En proceso').length;
+  }
+
   get procesoTerminado(): number {
     return this.expedientes.filter(e => e.estado === 'Finalizado').length;
   }
