@@ -15,7 +15,12 @@ export class Bandeja implements OnInit {
   idEditando: number | null = null;
   expedienteEditando: Expediente = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '' };
 
+  formularioEnviado = false;
+  edicionEnviada = false;
+  alerta = { mensaje: '', visible: false };
+
   private readonly flujoEstados = ['Pendiente', 'En proceso', 'Finalizado'];
+  private alertaTimeout: ReturnType<typeof setTimeout> | null = null;
 
   nuevoExpediente: Expediente = {
     id: 0,
@@ -37,12 +42,26 @@ export class Bandeja implements OnInit {
     }
   }
 
+  mostrarAlerta(mensaje: string) {
+    if (this.alertaTimeout) clearTimeout(this.alertaTimeout);
+    this.alerta = { mensaje, visible: true };
+    this.alertaTimeout = setTimeout(() => {
+      this.alerta.visible = false;
+    }, 3500);
+  }
+
   iniciarEdicion(expediente: Expediente) {
     this.idEditando = expediente.id;
+    this.edicionEnviada = false;
     this.expedienteEditando = { ...expediente };
   }
 
   guardarEdicion() {
+    this.edicionEnviada = true;
+    if (!this.expedienteEditando.nombre || !this.expedienteEditando.estado || !this.expedienteEditando.fechaCreacion) {
+      this.mostrarAlerta('Complete todos los campos obligatorios antes de guardar.');
+      return;
+    }
     const index = this.expedientes.findIndex(e => e.id === this.idEditando);
     if (index !== -1) {
       this.expedientes[index] = { ...this.expedienteEditando };
@@ -53,6 +72,7 @@ export class Bandeja implements OnInit {
 
   cancelarEdicion() {
     this.idEditando = null;
+    this.edicionEnviada = false;
     this.expedienteEditando = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '' };
   }
 
@@ -65,8 +85,9 @@ export class Bandeja implements OnInit {
   }
 
   agregarExpediente() {
+    this.formularioEnviado = true;
     if (!this.nuevoExpediente.nombre || !this.nuevoExpediente.estado || !this.nuevoExpediente.fechaCreacion) {
-      alert('Debe completar todos los datos');
+      this.mostrarAlerta('Complete todos los campos obligatorios antes de agregar.');
       return;
     }
 
@@ -90,6 +111,7 @@ export class Bandeja implements OnInit {
 
   limpiarFormulario() {
     this.nuevoExpediente = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '' };
+    this.formularioEnviado = false;
   }
 
   guardarLocalStorage() {
