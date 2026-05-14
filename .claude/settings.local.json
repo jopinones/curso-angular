@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /s /b \"C:\\\\Users\\\\jonathan.pinones\\\\DEV\\\\ANGULAR\\\\sesion1\\\\portal-expedientes\\\\src\")",
+      "Bash(findstr /i \".ts$\")",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\jonathan.pinones\\\\DEV\\\\ANGULAR\\\\sesion1\\\\portal-expedientes\\\\src\" -Recurse | Where-Object { $_.Extension -eq \".ts\" } | ForEach-Object { $_.FullName })"
+    ]
+  }
+}

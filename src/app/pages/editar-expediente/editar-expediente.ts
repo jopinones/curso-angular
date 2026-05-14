@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Expediente } from '../../../models/expediente';
+import { ExpedienteService } from '../../services/expediente';
 
 @Component({
   selector: 'app-editar-expediente',
@@ -18,18 +19,15 @@ export class EditarExpediente implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private expedienteService: ExpedienteService,
   ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    const data = localStorage.getItem('expedientes');
-    if (data) {
-      const expedientes: Expediente[] = JSON.parse(data);
-      const exp = expedientes.find(e => e.id === id);
-      if (exp) {
-        this.expediente = { ...exp };
-        this.encontrado = true;
-      }
+    const exp = this.expedienteService.obtenerPorId(id);
+    if (exp) {
+      this.expediente = { ...exp };
+      this.encontrado = true;
     }
   }
 
@@ -39,15 +37,7 @@ export class EditarExpediente implements OnInit {
       this.alerta = { mensaje: 'Complete todos los campos obligatorios.', tipo: 'error' };
       return;
     }
-    const data = localStorage.getItem('expedientes');
-    if (data) {
-      const expedientes: Expediente[] = JSON.parse(data);
-      const index = expedientes.findIndex(e => e.id === this.expediente.id);
-      if (index !== -1) {
-        expedientes[index] = { ...this.expediente };
-        localStorage.setItem('expedientes', JSON.stringify(expedientes));
-      }
-    }
+    this.expedienteService.actualizarExpediente(this.expediente);
     this.router.navigate(['/bandeja']);
   }
 

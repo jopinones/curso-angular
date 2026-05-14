@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Expediente } from '../../models/expediente';
 import { CommonModule } from '@angular/common';
+import { ExpedienteService } from '../services/expediente';
 
 @Component({
   selector: 'app-bandeja',
@@ -27,16 +28,10 @@ export class Bandeja implements OnInit {
     fechaCreacion: '',
   };
 
+  constructor(private expedienteService: ExpedienteService) {}
+
   ngOnInit() {
-    const data = localStorage.getItem('expedientes');
-    if (data) {
-      this.expedientes = JSON.parse(data);
-    } else {
-      this.expedientes = [
-        { id: 1, nombre: 'Fiscalización', estado: 'Pendiente', prioridad: 'Alta', fechaCreacion: '2026-05-02' },
-        { id: 2, nombre: 'Revisión', estado: 'Pendiente', prioridad: 'Media', fechaCreacion: '2026-05-04' },
-      ];
-    }
+    this.cargarExpediente();
   }
 
   toggleFormulario() {
@@ -57,7 +52,11 @@ export class Bandeja implements OnInit {
     if (!expediente) return;
     const indiceActual = this.flujoEstados.indexOf(expediente.estado);
     expediente.estado = this.flujoEstados[(indiceActual + 1) % this.flujoEstados.length];
-    this.guardarLocalStorage();
+    this.expedienteService.actualizarExpediente(expediente);
+  }
+
+  cargarExpediente() {
+    this.expedientes = this.expedienteService.obtenerExpediente();
   }
 
   agregarExpediente() {
@@ -75,23 +74,21 @@ export class Bandeja implements OnInit {
       fechaCreacion: this.nuevoExpediente.fechaCreacion,
     };
 
-    this.expedientes.push(expediente);
-    this.guardarLocalStorage();
+    this.expedienteService.agregarExpediente(expediente);
+    this.cargarExpediente();
     this.limpiarFormulario();
     this.mostrarFormulario = false;
   }
 
   eliminarExpediente(id: number) {
-    this.expedientes = this.expedientes.filter(e => e.id !== id);
-    this.guardarLocalStorage();
+    const confirmar = confirm('¿Está seguro de eliminar el expediente?');
+    if (!confirmar) return;
+    this.expedienteService.eliminarExpediente(id);
+    this.cargarExpediente();
   }
 
   limpiarFormulario() {
     this.nuevoExpediente = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '' };
     this.formularioEnviado = false;
-  }
-
-  guardarLocalStorage() {
-    localStorage.setItem('expedientes', JSON.stringify(this.expedientes));
   }
 }
