@@ -5,6 +5,7 @@ import { Acerca } from './pages/acerca/acerca';
 import { Reportes } from './pages/reportes/reportes';
 import { DetalleExpediente } from './pages/detalle-expediente/detalle-expediente';
 import { EditarExpediente } from './pages/editar-expediente/editar-expediente';
+import { Pendientes } from './pages/pendientes/pendientes';
 
 export const routes: Routes = [
     {
@@ -14,6 +15,10 @@ export const routes: Routes = [
     {
         path: 'bandeja',
         component: Bandeja
+    },
+    {
+        path: 'pendientes',
+        component: Pendientes
     },
     {
         path: 'acerca',
