@@ -44,6 +44,11 @@
         <span class="campo-label">Fecha de creación</span>
         <span class="campo-valor">{{ expediente.fechaCreacion }}</span>
       </div>
+
+      <div class="campo-fila">
+        <span class="campo-label">Observación</span>
+        <span class="campo-valor">{{ expediente.observaciones || '—' }}</span>
+      </div>
     </div>
 
     <div class="detalle-acciones">

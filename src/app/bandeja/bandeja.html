@@ -72,6 +72,16 @@
             <span class="msg-error">Seleccione una fecha.</span>
           }
         </div>
+
+        <div class="form-field form-field-full">
+          <label class="form-label">Observación</label>
+          <textarea
+            class="form-control"
+            rows="3"
+            placeholder="Ingrese una observación (opcional)"
+            [(ngModel)]="nuevoExpediente.observaciones"
+          ></textarea>
+        </div>
       </div>
 
       <div class="form-acciones">

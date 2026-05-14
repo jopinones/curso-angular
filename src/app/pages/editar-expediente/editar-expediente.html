@@ -75,6 +75,16 @@
         }
       </div>
 
+      <div class="form-field">
+        <label class="form-label">Observación</label>
+        <textarea
+          class="form-control"
+          rows="3"
+          placeholder="Ingrese una observación (opcional)"
+          [(ngModel)]="expediente.observaciones"
+        ></textarea>
+      </div>
+
       @if (alerta.mensaje) {
         <div class="alerta-error">&#9888; {{ alerta.mensaje }}</div>
       }

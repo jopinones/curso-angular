@@ -72,6 +72,7 @@ export class Bandeja implements OnInit {
       estado: this.nuevoExpediente.estado,
       prioridad: this.nuevoExpediente.prioridad,
       fechaCreacion: this.nuevoExpediente.fechaCreacion,
+      observaciones: this.nuevoExpediente.observaciones,
     };
 
     this.expedienteService.agregarExpediente(expediente);
