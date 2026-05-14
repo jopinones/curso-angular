@@ -1,0 +1,88 @@
+<div class="editar-contenedor">
+
+  @if (!encontrado) {
+    <div class="no-encontrado">
+      <span class="no-encontrado-icono">&#9888;</span>
+      <p>No se encontró el expediente solicitado.</p>
+      <button class="btn btn-secundario" routerLink="/bandeja">Volver a la Bandeja</button>
+    </div>
+  } @else {
+    <div class="editar-header">
+      <div>
+        <h1 class="editar-titulo">Editar Expediente</h1>
+        <p class="editar-subtitulo">Modifique los campos y guarde los cambios.</p>
+      </div>
+      <button class="btn btn-secundario" (click)="cancelar()">&#8592; Volver</button>
+    </div>
+
+    <div class="form-card">
+      <div class="form-field">
+        <label class="form-label">ID</label>
+        <input type="text" class="form-control" [value]="expediente.id" disabled />
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Nombre del expediente <span class="requerido">*</span></label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="expediente.nombre"
+          [class.campo-invalido]="enviado && !expediente.nombre"
+          placeholder="Ingrese el nombre del expediente"
+        />
+        @if (enviado && !expediente.nombre) {
+          <span class="msg-error">Este campo es obligatorio.</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Estado <span class="requerido">*</span></label>
+        <select
+          class="form-select"
+          [(ngModel)]="expediente.estado"
+          [class.campo-invalido]="enviado && !expediente.estado"
+        >
+          <option value="">Seleccione un estado</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="En proceso">En proceso</option>
+          <option value="Finalizado">Finalizado</option>
+        </select>
+        @if (enviado && !expediente.estado) {
+          <span class="msg-error">Seleccione un estado.</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Prioridad</label>
+        <select class="form-select" [(ngModel)]="expediente.prioridad">
+          <option value="">Sin prioridad</option>
+          <option value="Alta">Alta</option>
+          <option value="Media">Media</option>
+          <option value="Baja">Baja</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Fecha de creación <span class="requerido">*</span></label>
+        <input
+          type="date"
+          class="form-control"
+          [(ngModel)]="expediente.fechaCreacion"
+          [class.campo-invalido]="enviado && !expediente.fechaCreacion"
+        />
+        @if (enviado && !expediente.fechaCreacion) {
+          <span class="msg-error">Seleccione una fecha.</span>
+        }
+      </div>
+
+      @if (alerta.mensaje) {
+        <div class="alerta-error">&#9888; {{ alerta.mensaje }}</div>
+      }
+
+      <div class="form-acciones">
+        <button class="btn btn-secundario" (click)="cancelar()">Cancelar</button>
+        <button class="btn btn-primario" (click)="guardar()">Guardar cambios</button>
+      </div>
+    </div>
+  }
+</div>

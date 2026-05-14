@@ -1,135 +1,142 @@
 <div class="alerta-toast" [ngClass]="{ 'alerta-visible': alerta.visible }">
-    <span class="alerta-icono">&#9888;</span>
-    {{ alerta.mensaje }}
+  <span class="alerta-icono">&#9888;</span>
+  {{ alerta.mensaje }}
 </div>
 
 <div class="contenedor">
-    <h1>Portal de Expedientes Electrónicos</h1>
 
-    <h2>Bandeja de Trabajo</h2>
+  <div class="bandeja-header">
+    <div>
+      <h1 class="bandeja-titulo">Bandeja de Trabajo</h1>
+      <p class="bandeja-subtitulo">Gestione sus expedientes electrónicos</p>
+    </div>
+    <button class="btn btn-primario" (click)="toggleFormulario()">
+      {{ mostrarFormulario ? '✕ Cancelar' : '+ Crear Expediente' }}
+    </button>
+  </div>
 
-    <div class="formulario">
-        <input
+  @if (mostrarFormulario) {
+    <div class="formulario-panel">
+      <h2 class="form-titulo">Nuevo Expediente</h2>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label">Nombre <span class="requerido">*</span></label>
+          <input
             type="text"
-            placeholder="Nombre del expediente *"
             class="form-control"
+            placeholder="Nombre del expediente"
             [(ngModel)]="nuevoExpediente.nombre"
             [class.campo-invalido]="formularioEnviado && !nuevoExpediente.nombre"
-        >
+          />
+          @if (formularioEnviado && !nuevoExpediente.nombre) {
+            <span class="msg-error">Campo obligatorio.</span>
+          }
+        </div>
 
-        <select
-            [(ngModel)]="nuevoExpediente.estado"
+        <div class="form-field">
+          <label class="form-label">Estado <span class="requerido">*</span></label>
+          <select
             class="form-select"
+            [(ngModel)]="nuevoExpediente.estado"
             [class.campo-invalido]="formularioEnviado && !nuevoExpediente.estado"
-        >
-            <option value="">Seleccione un estado *</option>
+          >
+            <option value="">Seleccione un estado</option>
             <option value="Pendiente">Pendiente</option>
             <option value="En proceso">En proceso</option>
             <option value="Finalizado">Finalizado</option>
-        </select>
+          </select>
+          @if (formularioEnviado && !nuevoExpediente.estado) {
+            <span class="msg-error">Seleccione un estado.</span>
+          }
+        </div>
 
-        <select [(ngModel)]="nuevoExpediente.prioridad" class="form-select">
-            <option value="">Seleccione prioridad</option>
+        <div class="form-field">
+          <label class="form-label">Prioridad</label>
+          <select class="form-select" [(ngModel)]="nuevoExpediente.prioridad">
+            <option value="">Sin prioridad</option>
             <option value="Alta">Alta</option>
             <option value="Media">Media</option>
             <option value="Baja">Baja</option>
-        </select>
+          </select>
+        </div>
 
-        <input
+        <div class="form-field">
+          <label class="form-label">Fecha de creación <span class="requerido">*</span></label>
+          <input
             type="date"
             class="form-control"
             [(ngModel)]="nuevoExpediente.fechaCreacion"
             [class.campo-invalido]="formularioEnviado && !nuevoExpediente.fechaCreacion"
-        >
+          />
+          @if (formularioEnviado && !nuevoExpediente.fechaCreacion) {
+            <span class="msg-error">Seleccione una fecha.</span>
+          }
+        </div>
+      </div>
 
-        <button type="button" class="btn btn-primary" (click)="agregarExpediente()">Agregar Expediente</button>
-
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Estado</th>
-                    <th>Prioridad</th>
-                    <th>Fecha de creación</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (expediente of expedientes; track expediente.id) {
-                    @if (expediente.id === idEditando) {
-                        <tr class="fila-editando">
-                            <td>{{ expediente.id }}</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    class="form-control input-celda"
-                                    [(ngModel)]="expedienteEditando.nombre"
-                                    [class.campo-invalido]="edicionEnviada && !expedienteEditando.nombre"
-                                >
-                            </td>
-                            <td>
-                                <select
-                                    class="form-select input-celda"
-                                    [(ngModel)]="expedienteEditando.estado"
-                                    [class.campo-invalido]="edicionEnviada && !expedienteEditando.estado"
-                                >
-                                    <option value="Pendiente">Pendiente</option>
-                                    <option value="En proceso">En proceso</option>
-                                    <option value="Finalizado">Finalizado</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-select input-celda" [(ngModel)]="expedienteEditando.prioridad">
-                                    <option value="Alta">Alta</option>
-                                    <option value="Media">Media</option>
-                                    <option value="Baja">Baja</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input
-                                    type="date"
-                                    class="form-control input-celda"
-                                    [(ngModel)]="expedienteEditando.fechaCreacion"
-                                    [class.campo-invalido]="edicionEnviada && !expedienteEditando.fechaCreacion"
-                                >
-                            </td>
-                            <td class="acciones">
-                                <button type="button" class="btn btn-success" (click)="guardarEdicion()">Guardar</button>
-                                <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
-                            </td>
-                        </tr>
-                    } @else {
-                        <tr>
-                            <td>{{ expediente.id }}</td>
-                            <td>{{ expediente.nombre }}</td>
-                            <td>
-                                <span class="badge-estado" [ngClass]="{
-                                    'estado-pendiente': expediente.estado === 'Pendiente',
-                                    'estado-en-proceso': expediente.estado === 'En proceso',
-                                    'estado-finalizado': expediente.estado === 'Finalizado'
-                                }">{{ expediente.estado }}</span>
-                            </td>
-                            <td>
-                                <span class="badge" [ngClass]="{
-                                    'alta': expediente.prioridad === 'Alta',
-                                    'media': expediente.prioridad === 'Media',
-                                    'baja': expediente.prioridad === 'Baja'
-                                }">
-                                    {{ expediente.prioridad }}
-                                </span>
-                            </td>
-                            <td>{{ expediente.fechaCreacion }}</td>
-                            <td class="acciones">
-                                <button type="button" class="btn btn-secondary btn-estado" (click)="cambiarEstado(expediente.id)">Cambiar estado</button>
-                                <button class="btn btn-info" [routerLink]="['/expediente', expediente.id]">Ver Detalle</button>
-                                <button type="button" class="btn btn-warning" (click)="iniciarEdicion(expediente)">Editar</button>
-                                <button type="button" class="btn btn-danger" (click)="eliminarExpediente(expediente.id)">Eliminar</button>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
+      <div class="form-acciones">
+        <button class="btn btn-secundario" (click)="toggleFormulario()">Cancelar</button>
+        <button class="btn btn-primario" (click)="agregarExpediente()">Guardar expediente</button>
+      </div>
     </div>
+  }
+
+  <div class="tabla-contenedor">
+    @if (expedientes.length === 0) {
+      <div class="vacio">
+        <span class="vacio-icono">&#128193;</span>
+        <p>No hay expedientes. Cree uno usando el botón de arriba.</p>
+      </div>
+    } @else {
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Estado</th>
+            <th>Prioridad</th>
+            <th>Fecha creación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (expediente of expedientes; track expediente.id) {
+            <tr>
+              <td class="col-id">{{ expediente.id }}</td>
+              <td class="col-nombre">{{ expediente.nombre }}</td>
+              <td>
+                <span class="badge-estado" [ngClass]="{
+                  'estado-pendiente': expediente.estado === 'Pendiente',
+                  'estado-en-proceso': expediente.estado === 'En proceso',
+                  'estado-finalizado': expediente.estado === 'Finalizado'
+                }">{{ expediente.estado }}</span>
+              </td>
+              <td>
+                <span class="badge-prioridad" [ngClass]="{
+                  'prioridad-alta': expediente.prioridad === 'Alta',
+                  'prioridad-media': expediente.prioridad === 'Media',
+                  'prioridad-baja': expediente.prioridad === 'Baja'
+                }">{{ expediente.prioridad || '—' }}</span>
+              </td>
+              <td>{{ expediente.fechaCreacion }}</td>
+              <td class="acciones">
+                <button class="btn btn-accion btn-accion-estado" (click)="cambiarEstado(expediente.id)" title="Avanzar estado">
+                  &#8635; Estado
+                </button>
+                <button class="btn btn-accion btn-accion-detalle" [routerLink]="['/expediente', expediente.id]" title="Ver detalle">
+                  &#128065; Detalle
+                </button>
+                <button class="btn btn-accion btn-accion-editar" [routerLink]="['/expedientes/editar', expediente.id]" title="Editar">
+                  &#9998; Editar
+                </button>
+                <button class="btn btn-accion btn-accion-eliminar" (click)="eliminarExpediente(expediente.id)" title="Eliminar">
+                  &#128465; Eliminar
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
 </div>

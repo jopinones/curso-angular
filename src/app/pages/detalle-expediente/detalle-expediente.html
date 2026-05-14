@@ -1,19 +1,55 @@
-<div class="detalle">
-    <h1>Detalle Expediente</h1>
+<div class="detalle-contenedor">
 
-    @if (expediente) {
-        <div class="card">
-            <p><strong>ID:</strong> {{ expediente.id}}</p>
-            <p><strong>Nombre:</strong> {{ expediente.nombre }}</p>
-            <p><strong>Estado:</strong> {{ expediente.estado }}</p>
-            <p><strong>Priodidad:</strong> {{ expediente.prioridad }}</p>
-            <p><strong>Fecha creación:</strong> {{ expediente.fechaCreacion }}</p>
-        </div>
-    }
-   @else {
-    <div class="mensaje-error-contenedor">
-      <p class="mensaje-error">⚠️ No se encontró el expediente solicitado.</p>
-      <button class="btn-primario" routerLink="/bandeja">Regresar a la lista</button>
+  @if (!expediente) {
+    <div class="no-encontrado">
+      <span class="no-encontrado-icono">&#9888;</span>
+      <p>No se encontró el expediente solicitado.</p>
+      <button class="btn btn-secundario" routerLink="/bandeja">&#8592; Volver a la Bandeja</button>
     </div>
-   } 
+  } @else {
+    <div class="detalle-header">
+      <div>
+        <h1 class="detalle-titulo">Detalle del Expediente</h1>
+        <p class="detalle-subtitulo">Información completa del expediente seleccionado</p>
+      </div>
+      <button class="btn btn-secundario" routerLink="/bandeja">&#8592; Volver</button>
+    </div>
+
+    <div class="detalle-card">
+      <div class="campo-fila">
+        <span class="campo-label">ID</span>
+        <span class="campo-valor campo-id">{{ expediente.id }}</span>
+      </div>
+
+      <div class="campo-fila">
+        <span class="campo-label">Nombre</span>
+        <span class="campo-valor campo-nombre">{{ expediente.nombre }}</span>
+      </div>
+
+      <div class="campo-fila">
+        <span class="campo-label">Estado</span>
+        <span class="badge-estado" [ngClass]="obtenerClaseEstado(expediente.estado)">
+          {{ expediente.estado }}
+        </span>
+      </div>
+
+      <div class="campo-fila">
+        <span class="campo-label">Prioridad</span>
+        <span class="badge-prioridad" [ngClass]="obtenerClasePrioridad(expediente.prioridad)">
+          {{ expediente.prioridad || '—' }}
+        </span>
+      </div>
+
+      <div class="campo-fila">
+        <span class="campo-label">Fecha de creación</span>
+        <span class="campo-valor">{{ expediente.fechaCreacion }}</span>
+      </div>
+    </div>
+
+    <div class="detalle-acciones">
+      <button class="btn btn-secundario" routerLink="/bandeja">&#8592; Volver a la Bandeja</button>
+      <button class="btn btn-editar" [routerLink]="['/expedientes/editar', expediente.id]">&#9998; Editar</button>
+    </div>
+  }
+
 </div>

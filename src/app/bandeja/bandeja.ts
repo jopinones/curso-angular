@@ -12,11 +12,8 @@ import { CommonModule } from '@angular/common';
 })
 export class Bandeja implements OnInit {
   expedientes: Expediente[] = [];
-  idEditando: number | null = null;
-  expedienteEditando: Expediente = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '' };
-
+  mostrarFormulario = false;
   formularioEnviado = false;
-  edicionEnviada = false;
   alerta = { mensaje: '', visible: false };
 
   private readonly flujoEstados = ['Pendiente', 'En proceso', 'Finalizado'];
@@ -36,10 +33,15 @@ export class Bandeja implements OnInit {
       this.expedientes = JSON.parse(data);
     } else {
       this.expedientes = [
-        { id: 1, nombre: 'Fiscalización', estado: 'Pendiente', prioridad: 'Alta', fechaCreacion: '02/05/2026' },
-        { id: 2, nombre: 'Revisión', estado: 'Pendiente', prioridad: 'Media', fechaCreacion: '04/05/2026' },
+        { id: 1, nombre: 'Fiscalización', estado: 'Pendiente', prioridad: 'Alta', fechaCreacion: '2026-05-02' },
+        { id: 2, nombre: 'Revisión', estado: 'Pendiente', prioridad: 'Media', fechaCreacion: '2026-05-04' },
       ];
     }
+  }
+
+  toggleFormulario() {
+    this.mostrarFormulario = !this.mostrarFormulario;
+    if (!this.mostrarFormulario) this.limpiarFormulario();
   }
 
   mostrarAlerta(mensaje: string) {
@@ -48,32 +50,6 @@ export class Bandeja implements OnInit {
     this.alertaTimeout = setTimeout(() => {
       this.alerta.visible = false;
     }, 3500);
-  }
-
-  iniciarEdicion(expediente: Expediente) {
-    this.idEditando = expediente.id;
-    this.edicionEnviada = false;
-    this.expedienteEditando = { ...expediente };
-  }
-
-  guardarEdicion() {
-    this.edicionEnviada = true;
-    if (!this.expedienteEditando.nombre || !this.expedienteEditando.estado || !this.expedienteEditando.fechaCreacion) {
-      this.mostrarAlerta('Complete todos los campos obligatorios antes de guardar.');
-      return;
-    }
-    const index = this.expedientes.findIndex(e => e.id === this.idEditando);
-    if (index !== -1) {
-      this.expedientes[index] = { ...this.expedienteEditando };
-    }
-    this.guardarLocalStorage();
-    this.cancelarEdicion();
-  }
-
-  cancelarEdicion() {
-    this.idEditando = null;
-    this.edicionEnviada = false;
-    this.expedienteEditando = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '' };
   }
 
   cambiarEstado(id: number) {
@@ -102,6 +78,7 @@ export class Bandeja implements OnInit {
     this.expedientes.push(expediente);
     this.guardarLocalStorage();
     this.limpiarFormulario();
+    this.mostrarFormulario = false;
   }
 
   eliminarExpediente(id: number) {

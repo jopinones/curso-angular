@@ -1,23 +1,179 @@
-.detalle {
-    max-width: 800px;
-    margin: 20px auto;
-    font-family: Arial, Helvetica, sans-serif;
+.detalle-contenedor {
+  max-width: 640px;
+  margin: 32px auto;
+  padding: 0 16px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-.card {
-    background-color: white;
-    border: 1px solid #ddd;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+/* Header */
+.detalle-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
 }
 
-.card p {
-    margin-bottom: 10px;
+.detalle-titulo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 4px 0;
 }
 
-.mensaje-error {
-    background-color: red;
-    color: white;
-    padding: 10px;
+.detalle-subtitulo {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Card de datos */
+.detalle-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.campo-fila {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.campo-fila:last-child {
+  border-bottom: none;
+}
+
+.campo-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  min-width: 140px;
+}
+
+.campo-valor {
+  font-size: 0.95rem;
+  color: #1e293b;
+}
+
+.campo-id {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.campo-nombre {
+  font-weight: 600;
+}
+
+/* Badges de estado — mismos que bandeja */
+.badge-estado {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.estado-pendiente {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.estado-en-proceso {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.estado-finalizado {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+/* Badges de prioridad — mismos que bandeja */
+.badge-prioridad {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+  white-space: nowrap;
+  color: #ffffff;
+}
+
+.prioridad-alta {
+  background-color: #dc2626;
+}
+
+.prioridad-media {
+  background-color: #d97706;
+}
+
+.prioridad-baja {
+  background-color: #16a34a;
+}
+
+/* Acciones */
+.detalle-acciones {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.5rem 1.1rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, box-shadow 0.18s;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.btn-secundario {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.btn-secundario:hover {
+  background: #e2e8f0;
+}
+
+.btn-editar {
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+.btn-editar:hover {
+  background: #fef3c7;
+}
+
+/* No encontrado */
+.no-encontrado {
+  text-align: center;
+  padding: 48px 24px;
+  color: #64748b;
+}
+
+.no-encontrado-icono {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 12px;
+  color: #f59e0b;
 }

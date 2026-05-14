@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { NgClass } from '@angular/common';
 import { Expediente } from '../../../models/expediente';
 
 @Component({
   selector: 'app-detalle-expediente',
-  imports: [RouterLink],
+  imports: [RouterLink, NgClass],
   templateUrl: './detalle-expediente.html',
   styleUrl: './detalle-expediente.css',
 })
