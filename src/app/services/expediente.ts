@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Expediente } from '../../models/expediente';
+import { Expediente, HistorialEntry } from '../../models/expediente';
 
 @Injectable({
   providedIn: 'root',
@@ -12,11 +12,17 @@ export class ExpedienteService {
 
   private cargarDesdeStorage(): Expediente[] {
     const data = localStorage.getItem(this.storageKey);
-    if (data) return JSON.parse(data);
+    if (data) {
+      // normaliza registros viejos que no tengan historial
+      return (JSON.parse(data) as Expediente[]).map(e => ({
+        ...e,
+        historial: e.historial ?? [],
+      }));
+    }
 
     const iniciales: Expediente[] = [
-      { id: 1, nombre: 'Fiscalización', estado: 'Pendiente', prioridad: 'Alta', fechaCreacion: '2026-05-02' },
-      { id: 2, nombre: 'Revisión', estado: 'Pendiente', prioridad: 'Media', fechaCreacion: '2026-05-04' },
+      { id: 1, nombre: 'Fiscalización', estado: 'Pendiente', prioridad: 'Alta', fechaCreacion: '2026-05-02', historial: [] },
+      { id: 2, nombre: 'Revisión', estado: 'Pendiente', prioridad: 'Media', fechaCreacion: '2026-05-04', historial: [] },
     ];
     this.guardarExpedientes(iniciales);
     return iniciales;
@@ -48,6 +54,22 @@ export class ExpedienteService {
     );
     this._expedientes.set(actualizados);
     this.guardarExpedientes(actualizados);
+  }
+
+  agregarHistorial(
+    expediente: Expediente,
+    estadoAnterior: string,
+    estadoNuevo: string,
+    observacion: string,
+  ): void {
+    const entrada: HistorialEntry = {
+      fecha: new Date().toISOString().split('T')[0],
+      estadoAnterior,
+      estadoNuevo,
+      observacion,
+    };
+    if (!expediente.historial) expediente.historial = [];
+    expediente.historial.push(entrada);
   }
 
   contarTotal(): number {

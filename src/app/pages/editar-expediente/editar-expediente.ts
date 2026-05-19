@@ -11,7 +11,7 @@ import { ExpedienteService } from '../../services/expediente';
   styleUrl: './editar-expediente.css',
 })
 export class EditarExpediente implements OnInit {
-  expediente: Expediente = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '' };
+  expediente: Expediente = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '', historial: [] };
   encontrado = false;
   enviado = false;
   alerta = { mensaje: '', tipo: '' };

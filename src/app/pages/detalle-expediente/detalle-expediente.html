@@ -1,12 +1,7 @@
 <div class="detalle-contenedor">
 
-  @if (!expediente) {
-    <div class="no-encontrado">
-      <span class="no-encontrado-icono">&#9888;</span>
-      <p>No se encontró el expediente solicitado.</p>
-      <button class="btn btn-secundario" routerLink="/bandeja">&#8592; Volver a la Bandeja</button>
-    </div>
-  } @else {
+  @if (expediente(); as exp) {
+
     <div class="detalle-header">
       <div>
         <h1 class="detalle-titulo">Detalle del Expediente</h1>
@@ -18,42 +13,75 @@
     <div class="detalle-card">
       <div class="campo-fila">
         <span class="campo-label">ID</span>
-        <span class="campo-valor campo-id">{{ expediente.id }}</span>
+        <span class="campo-valor campo-id">{{ exp.id }}</span>
       </div>
 
       <div class="campo-fila">
         <span class="campo-label">Nombre</span>
-        <span class="campo-valor campo-nombre">{{ expediente.nombre }}</span>
+        <span class="campo-valor campo-nombre">{{ exp.nombre }}</span>
       </div>
 
       <div class="campo-fila">
         <span class="campo-label">Estado</span>
-        <span class="badge-estado" [ngClass]="obtenerClaseEstado(expediente.estado)">
-          {{ expediente.estado }}
+        <span class="badge-estado" [ngClass]="obtenerClaseEstado(exp.estado)">
+          {{ exp.estado }}
         </span>
       </div>
 
       <div class="campo-fila">
         <span class="campo-label">Prioridad</span>
-        <span class="badge-prioridad" [ngClass]="obtenerClasePrioridad(expediente.prioridad)">
-          {{ expediente.prioridad || '—' }}
+        <span class="badge-prioridad" [ngClass]="obtenerClasePrioridad(exp.prioridad)">
+          {{ exp.prioridad || '—' }}
         </span>
       </div>
 
       <div class="campo-fila">
         <span class="campo-label">Fecha de creación</span>
-        <span class="campo-valor">{{ expediente.fechaCreacion }}</span>
+        <span class="campo-valor">{{ exp.fechaCreacion | date: 'dd-MM-yyyy' }}</span>
       </div>
 
       <div class="campo-fila">
         <span class="campo-label">Observación</span>
-        <span class="campo-valor">{{ expediente.observaciones || '—' }}</span>
+        <span class="campo-valor">{{ exp.observaciones || '—' }}</span>
       </div>
+    </div>
+
+    <div class="historial-seccion">
+      <h2 class="historial-titulo">&#128203; Historial de cambios</h2>
+
+      @if (exp.historial.length === 0) {
+        <p class="historial-vacio">Sin cambios de estado registrados aún.</p>
+      } @else {
+        <div class="historial-lista">
+          @for (entrada of exp.historial; track $index) {
+            <div class="historial-entrada">
+              <span class="historial-fecha">{{ entrada.fecha | date: 'dd-MM-yyyy' }}</span>
+              <div class="historial-estados">
+                <span class="badge-estado" [ngClass]="obtenerClaseEstado(entrada.estadoAnterior)">
+                  {{ entrada.estadoAnterior }}
+                </span>
+                <span class="historial-flecha">&#8594;</span>
+                <span class="badge-estado" [ngClass]="obtenerClaseEstado(entrada.estadoNuevo)">
+                  {{ entrada.estadoNuevo }}
+                </span>
+              </div>
+              <span class="historial-observacion">{{ entrada.observacion }}</span>
+            </div>
+          }
+        </div>
+      }
     </div>
 
     <div class="detalle-acciones">
       <button class="btn btn-secundario" routerLink="/bandeja">&#8592; Volver a la Bandeja</button>
-      <button class="btn btn-editar" [routerLink]="['/expedientes/editar', expediente.id]">&#9998; Editar</button>
+      <button class="btn btn-editar" [routerLink]="['/expedientes/editar', exp.id]">&#9998; Editar</button>
+    </div>
+
+  } @else {
+    <div class="no-encontrado">
+      <span class="no-encontrado-icono">&#9888;</span>
+      <p>No se encontró el expediente solicitado.</p>
+      <button class="btn btn-secundario" routerLink="/bandeja">&#8592; Volver a la Bandeja</button>
     </div>
   }
 

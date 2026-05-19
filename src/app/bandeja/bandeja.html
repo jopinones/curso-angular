@@ -98,6 +98,42 @@
         <p>No hay expedientes. Cree uno usando el botón de arriba.</p>
       </div>
     } @else {
+      <div class="filtros-panel">
+        <div class="filtros-header">
+          <h2 class="filtros-titulo">&#128269; Filtros</h2>
+          <span class="filtros-resultados">{{ obtenerExpedienteFiltrados().length }} resultado(s)</span>
+        </div>
+        <div class="filtros-controles">
+          <select class="form-select filtros-select" [(ngModel)]="filtroEstado">
+            <option value="">Todos los estados</option>
+            <option value="Pendiente">Pendiente</option>
+            <option value="En proceso">En proceso</option>
+            <option value="Finalizado">Finalizado</option>
+          </select>
+
+          <select class="form-select filtros-select" [(ngModel)]="filtroPrioridad">
+            <option value="">Todas las prioridades</option>
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+          </select>
+
+          <button class="btn btn-secundario" (click)="limpiarFiltros()">&#10005; Limpiar filtros</button>
+        </div>
+      </div>
+
+      @if (expedientes.length === 0) {
+        <div class="vacio">
+          <span class="vacio-icono">&#128193;</span>
+          <p>No hay expedientes. Cree uno usando el botón de arriba.</p>
+        </div>
+      } @else if (obtenerExpedienteFiltrados().length === 0) {
+        <div class="sin-resultados">
+          <span class="sin-resultados-icono">&#128269;</span>
+          <p>Ningún expediente coincide con los filtros aplicados.</p>
+        </div>
+      } @else {
+
       <table class="tabla">
         <thead>
           <tr>
@@ -111,7 +147,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (expediente of expedientes; track expediente.id) {
+          @for (expediente of obtenerExpedienteFiltrados(); track expediente.id) {
             <tr>
               <td class="col-id">{{ expediente.id }}</td>
               <td class="col-nombre">{{ expediente.nombre }}</td>
@@ -129,8 +165,8 @@
                   'prioridad-baja': expediente.prioridad === 'Baja'
                 }">{{ expediente.prioridad || '—' }}</span>
               </td>
-              <td>{{ expediente.fechaCreacion }}</td>
-              <td class="col-observacion">{{ expediente.observaciones || '—' }}</td>
+              <td>{{ expediente.fechaCreacion | date: 'dd-MM-yyyy' }}</td>
+              <td class="col-observacion">{{ expediente.observaciones || 'Sin observación' }}</td>
               <td class="acciones">
                 <button class="btn btn-accion btn-accion-estado" (click)="cambiarEstado(expediente.id)" title="Avanzar estado">
                   &#8635; Estado
@@ -150,5 +186,6 @@
         </tbody>
       </table>
     }
+  }
   </div>
 </div>

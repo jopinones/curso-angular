@@ -20,12 +20,16 @@ export class Bandeja implements OnInit {
   private readonly flujoEstados = ['Pendiente', 'En proceso', 'Finalizado'];
   private alertaTimeout: ReturnType<typeof setTimeout> | null = null;
 
+  filtroEstado = '';
+  filtroPrioridad = '';
+
   nuevoExpediente: Expediente = {
     id: 0,
     nombre: '',
     estado: '',
     prioridad: '',
     fechaCreacion: '',
+    historial: []
   };
 
   constructor(private expedienteService: ExpedienteService) {}
@@ -50,8 +54,15 @@ export class Bandeja implements OnInit {
   cambiarEstado(id: number) {
     const expediente = this.expedientes.find(e => e.id === id);
     if (!expediente) return;
+    const estadoAnterior = expediente.estado;
     const indiceActual = this.flujoEstados.indexOf(expediente.estado);
     expediente.estado = this.flujoEstados[(indiceActual + 1) % this.flujoEstados.length];
+    this.expedienteService.agregarHistorial(
+      expediente,
+      estadoAnterior,
+      expediente.estado,
+      `Avance de estado registrado automáticamente`,
+    );
     this.expedienteService.actualizarExpediente(expediente);
     this.cargarExpediente();
   }
@@ -62,7 +73,7 @@ export class Bandeja implements OnInit {
 
   agregarExpediente() {
     this.formularioEnviado = true;
-    if (!this.nuevoExpediente.nombre || !this.nuevoExpediente.estado || !this.nuevoExpediente.fechaCreacion) {
+    if (!this.nuevoExpediente.nombre || !this.nuevoExpediente.estado || !this.nuevoExpediente.prioridad || !this.nuevoExpediente.fechaCreacion) {
       this.mostrarAlerta('Complete todos los campos obligatorios antes de agregar.');
       return;
     }
@@ -74,6 +85,7 @@ export class Bandeja implements OnInit {
       prioridad: this.nuevoExpediente.prioridad,
       fechaCreacion: this.nuevoExpediente.fechaCreacion,
       observaciones: this.nuevoExpediente.observaciones,
+      historial: this.nuevoExpediente.historial
     };
 
     this.expedienteService.agregarExpediente(expediente);
@@ -90,7 +102,27 @@ export class Bandeja implements OnInit {
   }
 
   limpiarFormulario() {
-    this.nuevoExpediente = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '' };
+    this.nuevoExpediente = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '', historial: [] };
     this.formularioEnviado = false;
   }
+
+  obtenerExpedienteFiltrados() {
+    return this.expedientes.filter(expediente => { 
+      const cumpleEstado = !this.filtroEstado || expediente.estado === this.filtroEstado;
+      
+      const cumplePrioridad = !this.filtroPrioridad|| expediente.prioridad === this.filtroPrioridad; 
+    
+      return cumpleEstado && cumplePrioridad;
+    });
+  }
+
+  limpiarFiltros() {
+
+    // Reestablecer los select 
+    this.filtroEstado = '';
+    this.filtroPrioridad = ''
+
+  }
+
+
 }

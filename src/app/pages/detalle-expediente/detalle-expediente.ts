@@ -1,27 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { NgClass } from '@angular/common';
-import { Expediente } from '../../../models/expediente';
+import { DatePipe, NgClass } from '@angular/common';
 import { ExpedienteService } from '../../services/expediente';
 
 @Component({
   selector: 'app-detalle-expediente',
-  imports: [RouterLink, NgClass],
+  imports: [RouterLink, NgClass, DatePipe],
   templateUrl: './detalle-expediente.html',
   styleUrl: './detalle-expediente.css',
 })
 export class DetalleExpediente implements OnInit {
-  idExpediente = 0;
-  expediente: Expediente | undefined;
+  private readonly route = inject(ActivatedRoute);
+  private readonly expedienteService = inject(ExpedienteService);
 
-  constructor(
-    private route: ActivatedRoute,
-    private expedienteService: ExpedienteService,
-  ) {}
+  private readonly idExpediente = signal(0);
+
+  readonly expediente = computed(() =>
+    this.expedienteService.expedientes().find(e => e.id === this.idExpediente()),
+  );
 
   ngOnInit(): void {
-    this.idExpediente = Number(this.route.snapshot.paramMap.get('id'));
-    this.expediente = this.expedienteService.obtenerPorId(this.idExpediente);
+    this.idExpediente.set(Number(this.route.snapshot.paramMap.get('id')));
   }
 
   obtenerClasePrioridad(prioridad: string): string {
