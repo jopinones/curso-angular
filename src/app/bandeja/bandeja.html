@@ -106,6 +106,7 @@
             <th>Estado</th>
             <th>Prioridad</th>
             <th>Fecha creación</th>
+            <th>Observación</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -129,6 +130,7 @@
                 }">{{ expediente.prioridad || '—' }}</span>
               </td>
               <td>{{ expediente.fechaCreacion }}</td>
+              <td class="col-observacion">{{ expediente.observaciones || '—' }}</td>
               <td class="acciones">
                 <button class="btn btn-accion btn-accion-estado" (click)="cambiarEstado(expediente.id)" title="Avanzar estado">
                   &#8635; Estado

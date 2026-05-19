@@ -53,6 +53,7 @@ export class Bandeja implements OnInit {
     const indiceActual = this.flujoEstados.indexOf(expediente.estado);
     expediente.estado = this.flujoEstados[(indiceActual + 1) % this.flujoEstados.length];
     this.expedienteService.actualizarExpediente(expediente);
+    this.cargarExpediente();
   }
 
   cargarExpediente() {

@@ -3,22 +3,22 @@
 
   <div class="cards-grid">
     <div class="card-indicador card-total">
-      <div class="card-numero">{{ totalRegistrado }}</div>
+      <div class="card-numero">{{ totalRegistrado() }}</div>
       <div class="card-etiqueta">Total Registrado</div>
     </div>
 
     <div class="card-indicador card-pendiente">
-      <div class="card-numero">{{ pendienteDeGestion }}</div>
+      <div class="card-numero">{{ pendienteDeGestion() }}</div>
       <div class="card-etiqueta">Pendiente de gestión</div>
     </div>
 
     <div class="card-indicador card-en-proceso">
-      <div class="card-numero">{{ enProceso }}</div>
+      <div class="card-numero">{{ enProceso() }}</div>
       <div class="card-etiqueta">En Proceso</div>
     </div>
 
     <div class="card-indicador card-finalizado">
-      <div class="card-numero">{{ procesoTerminado }}</div>
+      <div class="card-numero">{{ procesoTerminado() }}</div>
       <div class="card-etiqueta">Proceso terminado</div>
     </div>
   </div>

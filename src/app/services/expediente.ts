@@ -1,76 +1,65 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Expediente } from '../../models/expediente';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExpedienteService {
-  private storageKey = 'expediente';
+  private readonly storageKey = 'expediente';
+  private readonly _expedientes = signal<Expediente[]>(this.cargarDesdeStorage());
+
+  readonly expedientes = this._expedientes.asReadonly();
+
+  private cargarDesdeStorage(): Expediente[] {
+    const data = localStorage.getItem(this.storageKey);
+    if (data) return JSON.parse(data);
+
+    const iniciales: Expediente[] = [
+      { id: 1, nombre: 'Fiscalización', estado: 'Pendiente', prioridad: 'Alta', fechaCreacion: '2026-05-02' },
+      { id: 2, nombre: 'Revisión', estado: 'Pendiente', prioridad: 'Media', fechaCreacion: '2026-05-04' },
+    ];
+    this.guardarExpedientes(iniciales);
+    return iniciales;
+  }
 
   obtenerExpediente(): Expediente[] {
-    const data = localStorage.getItem(this.storageKey);
-
-    if (data) {
-      return JSON.parse(data);
-    }
-
-    const expedientesIniciales: Expediente[] = [
-      {
-        id: 1,
-        nombre: 'Fiscalización',
-        estado: 'Pendiente',
-        prioridad: 'Alta',
-        fechaCreacion: '2026-05-02',
-      },
-      {
-        id: 2,
-        nombre: 'Revisión',
-        estado: 'Pendiente',
-        prioridad: 'Media',
-        fechaCreacion: '2026-05-04',
-      },
-    ];
-
-    this.guardarExpedientes(expedientesIniciales);
-
-    return expedientesIniciales;
+    return this._expedientes();
   }
 
   obtenerPorId(id: number): Expediente | undefined {
-    const expedientes = this.obtenerExpediente();
-    return expedientes.find(e => e.id === id);
+    return this._expedientes().find(e => e.id === id);
   }
 
   agregarExpediente(expediente: Expediente): void {
-    const expedientes = this.obtenerExpediente();
-    expedientes.push(expediente);
-    this.guardarExpedientes(expedientes);
+    const actualizados = [...this._expedientes(), expediente];
+    this._expedientes.set(actualizados);
+    this.guardarExpedientes(actualizados);
   }
 
   eliminarExpediente(id: number): void {
-    const expedientes = this.obtenerExpediente();
-    const expedientesActualizados = expedientes.filter(e => e.id !== id);
-    this.guardarExpedientes(expedientesActualizados);
+    const actualizados = this._expedientes().filter(e => e.id !== id);
+    this._expedientes.set(actualizados);
+    this.guardarExpedientes(actualizados);
   }
 
   actualizarExpediente(expedienteActualizado: Expediente): void {
-    const expedientes = this.obtenerExpediente();
-    const expedientesActualizados = expedientes.map(e =>
+    const actualizados = this._expedientes().map(e =>
       e.id === expedienteActualizado.id ? expedienteActualizado : e,
     );
-    this.guardarExpedientes(expedientesActualizados);
+    this._expedientes.set(actualizados);
+    this.guardarExpedientes(actualizados);
   }
 
   contarTotal(): number {
-    return this.obtenerExpediente().length;
+    return this._expedientes().length;
   }
 
   contarPendientes(): number {
-    return this.obtenerExpediente().filter(e => e.estado === 'Pendiente').length;
+    return this._expedientes().filter(e => e.estado === 'Pendiente').length;
   }
 
   contarFinalizado(): number {
-    return this.obtenerExpediente().filter(e => e.estado === 'Finalizado').length;
+    return this._expedientes().filter(e => e.estado === 'Finalizado').length;
   }
 
   private guardarExpedientes(expedientes: Expediente[]): void {

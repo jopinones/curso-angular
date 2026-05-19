@@ -1,36 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Expediente } from '../../../models/expediente';
+import { Component, computed, inject } from '@angular/core';
+import { ExpedienteService } from '../../services/expediente';
 
 @Component({
   selector: 'app-reportes',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './reportes.html',
   styleUrl: './reportes.css',
 })
-export class Reportes implements OnInit {
-  expedientes: Expediente[] = [];
+export class Reportes {
+  private readonly service = inject(ExpedienteService);
 
-  ngOnInit() {
-    const data = localStorage.getItem('expedientes');
-    if (data) {
-      this.expedientes = JSON.parse(data);
-    }
-  }
-
-  get totalRegistrado(): number {
-    return this.expedientes.length;
-  }
-
-  get pendienteDeGestion(): number {
-    return this.expedientes.filter(e => e.estado === 'Pendiente').length;
-  }
-
-  get enProceso(): number {
-    return this.expedientes.filter(e => e.estado === 'En proceso').length;
-  }
-
-  get procesoTerminado(): number {
-    return this.expedientes.filter(e => e.estado === 'Finalizado').length;
-  }
+  readonly totalRegistrado = computed(() => this.service.expedientes().length);
+  readonly pendienteDeGestion = computed(() =>
+    this.service.expedientes().filter(e => e.estado === 'Pendiente').length,
+  );
+  readonly enProceso = computed(() =>
+    this.service.expedientes().filter(e => e.estado === 'En proceso').length,
+  );
+  readonly procesoTerminado = computed(() =>
+    this.service.expedientes().filter(e => e.estado === 'Finalizado').length,
+  );
 }
