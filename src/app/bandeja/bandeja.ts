@@ -22,6 +22,7 @@ export class Bandeja implements OnInit {
 
   filtroEstado = '';
   filtroPrioridad = '';
+  filtroVencimiento = '';
 
   nuevoExpediente: Expediente = {
     id: 0,
@@ -29,7 +30,8 @@ export class Bandeja implements OnInit {
     estado: '',
     prioridad: '',
     fechaCreacion: '',
-    historial: []
+    fechaVencimiento: '',
+    historial: [],
   };
 
   constructor(private expedienteService: ExpedienteService) {}
@@ -84,8 +86,9 @@ export class Bandeja implements OnInit {
       estado: this.nuevoExpediente.estado,
       prioridad: this.nuevoExpediente.prioridad,
       fechaCreacion: this.nuevoExpediente.fechaCreacion,
+      fechaVencimiento: this.nuevoExpediente.fechaVencimiento || undefined,
       observaciones: this.nuevoExpediente.observaciones,
-      historial: this.nuevoExpediente.historial
+      historial: this.nuevoExpediente.historial,
     };
 
     this.expedienteService.agregarExpediente(expediente);
@@ -102,26 +105,44 @@ export class Bandeja implements OnInit {
   }
 
   limpiarFormulario() {
-    this.nuevoExpediente = { id: 0, nombre: '', estado: '', prioridad: '', fechaCreacion: '', historial: [] };
+    this.nuevoExpediente = {
+      id: 0,
+      nombre: '',
+      estado: '',
+      prioridad: '',
+      fechaCreacion: '',
+      fechaVencimiento: '',
+      historial: [],
+    };
     this.formularioEnviado = false;
   }
 
+  estadoVencimiento(expediente: Expediente): 'vencido' | 'proximo' | 'vigente' | 'sin-fecha' {
+    if (!expediente.fechaVencimiento) return 'sin-fecha';
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    const [y, m, d] = expediente.fechaVencimiento.split('-').map(Number);
+    const venc = new Date(y, m - 1, d);
+    const diffDias = (venc.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24);
+    if (diffDias < 0) return 'vencido';
+    if (diffDias <= 7) return 'proximo';
+    return 'vigente';
+  }
+
   obtenerExpedienteFiltrados() {
-    return this.expedientes.filter(expediente => { 
+    return this.expedientes.filter(expediente => {
       const cumpleEstado = !this.filtroEstado || expediente.estado === this.filtroEstado;
-      
-      const cumplePrioridad = !this.filtroPrioridad|| expediente.prioridad === this.filtroPrioridad; 
-    
-      return cumpleEstado && cumplePrioridad;
+      const cumplePrioridad = !this.filtroPrioridad || expediente.prioridad === this.filtroPrioridad;
+      const cumpleVencimiento =
+        !this.filtroVencimiento || this.estadoVencimiento(expediente) === this.filtroVencimiento;
+      return cumpleEstado && cumplePrioridad && cumpleVencimiento;
     });
   }
 
   limpiarFiltros() {
-
-    // Reestablecer los select 
     this.filtroEstado = '';
-    this.filtroPrioridad = ''
-
+    this.filtroPrioridad = '';
+    this.filtroVencimiento = '';
   }
 
 

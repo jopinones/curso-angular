@@ -11,6 +11,7 @@ export interface Expediente {
   estado: string;
   prioridad: string;
   fechaCreacion: string;
+  fechaVencimiento?: string;
   observaciones?: string;
   historial: HistorialEntry[];
 }

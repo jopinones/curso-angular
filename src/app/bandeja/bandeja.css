@@ -260,6 +260,53 @@
   color: #15803d;
 }
 
+/* Badges de vencimiento */
+.badge-vencimiento {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.venc-vencido {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.venc-proximo {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.venc-vigente {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.venc-sin-fecha {
+  background-color: #f1f5f9;
+  color: #94a3b8;
+}
+
+/* Filas con vencimiento destacado */
+.fila-vencido {
+  background-color: #fff5f5 !important;
+}
+
+.fila-vencido:hover {
+  background-color: #fee2e2 !important;
+}
+
+.fila-proximo {
+  background-color: #fffbeb !important;
+}
+
+.fila-proximo:hover {
+  background-color: #fef3c7 !important;
+}
+
 /* Badges de prioridad */
 .badge-prioridad {
   padding: 3px 10px;

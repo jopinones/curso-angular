@@ -1,4 +1,5 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+.gitignore
 
 # Compiled output
 /dist
@@ -44,3 +45,4 @@ __screenshots__/
 Thumbs.db
 
 CLAUDE.md
+calendario.md

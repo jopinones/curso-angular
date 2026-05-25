@@ -73,6 +73,15 @@
           }
         </div>
 
+        <div class="form-field">
+          <label class="form-label">Fecha de vencimiento</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="nuevoExpediente.fechaVencimiento"
+          />
+        </div>
+
         <div class="form-field form-field-full">
           <label class="form-label">Observación</label>
           <textarea
@@ -118,6 +127,14 @@
             <option value="Baja">Baja</option>
           </select>
 
+          <select class="form-select filtros-select" [(ngModel)]="filtroVencimiento">
+            <option value="">Todos los vencimientos</option>
+            <option value="vencido">Vencidos</option>
+            <option value="proximo">Próximos a vencer</option>
+            <option value="vigente">Vigentes</option>
+            <option value="sin-fecha">Sin fecha</option>
+          </select>
+
           <button class="btn btn-secundario" (click)="limpiarFiltros()">&#10005; Limpiar filtros</button>
         </div>
       </div>
@@ -142,13 +159,17 @@
             <th>Estado</th>
             <th>Prioridad</th>
             <th>Fecha creación</th>
+            <th>Vencimiento</th>
             <th>Observación</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           @for (expediente of obtenerExpedienteFiltrados(); track expediente.id) {
-            <tr>
+            <tr [ngClass]="{
+              'fila-vencido': estadoVencimiento(expediente) === 'vencido',
+              'fila-proximo': estadoVencimiento(expediente) === 'proximo'
+            }">
               <td class="col-id">{{ expediente.id }}</td>
               <td class="col-nombre">{{ expediente.nombre }}</td>
               <td>
@@ -166,6 +187,19 @@
                 }">{{ expediente.prioridad || '—' }}</span>
               </td>
               <td>{{ expediente.fechaCreacion | date: 'dd-MM-yyyy' }}</td>
+              <td>
+                @if (expediente.fechaVencimiento) {
+                  <span class="badge-vencimiento" [ngClass]="{
+                    'venc-vencido': estadoVencimiento(expediente) === 'vencido',
+                    'venc-proximo': estadoVencimiento(expediente) === 'proximo',
+                    'venc-vigente': estadoVencimiento(expediente) === 'vigente'
+                  }">
+                    {{ expediente.fechaVencimiento | date: 'dd-MM-yyyy' }}
+                  </span>
+                } @else {
+                  <span class="badge-vencimiento venc-sin-fecha">—</span>
+                }
+              </td>
               <td class="col-observacion">{{ expediente.observaciones || 'Sin observación' }}</td>
               <td class="acciones">
                 <button class="btn btn-accion btn-accion-estado" (click)="cambiarEstado(expediente.id)" title="Avanzar estado">
