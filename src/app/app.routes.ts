@@ -6,6 +6,7 @@ import { Reportes } from './pages/reportes/reportes';
 import { DetalleExpediente } from './pages/detalle-expediente/detalle-expediente';
 import { EditarExpediente } from './pages/editar-expediente/editar-expediente';
 import { Pendientes } from './pages/pendientes/pendientes';
+import { ProximosVencer } from './pages/proximos-vencer/proximos-vencer';
 
 export const routes: Routes = [
     {
@@ -19,6 +20,10 @@ export const routes: Routes = [
     {
         path: 'pendientes',
         component: Pendientes
+    },
+    {
+        path: 'proximos-vencer',
+        component: ProximosVencer
     },
     {
         path: 'acerca',

@@ -1,0 +1,92 @@
+<div class="contenedor">
+
+  <div class="pv-header">
+    <div>
+      <h1 class="pv-titulo">&#128197; Próximos a Vencer</h1>
+      <p class="pv-subtitulo">Expedientes con fecha de vencimiento en los próximos 7 días</p>
+    </div>
+    <span class="badge-contador">
+      {{ expedientes.length }} expediente{{ expedientes.length !== 1 ? 's' : '' }}
+    </span>
+  </div>
+
+  <div class="tabla-contenedor">
+    @if (expedientes.length === 0) {
+      <div class="vacio">
+        <span class="vacio-icono">&#10003;</span>
+        <p>No hay expedientes próximos a vencer en los próximos 7 días.</p>
+      </div>
+    } @else {
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Estado</th>
+            <th>Prioridad</th>
+            <th>Fecha de vencimiento</th>
+            <th>Días restantes</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (expediente of expedientes; track expediente.id) {
+            <tr [ngClass]="{
+              'fila-hoy': urgencia(expediente.fechaVencimiento!) === 'hoy',
+              'fila-critico': urgencia(expediente.fechaVencimiento!) === 'critico'
+            }">
+              <td class="col-id">{{ expediente.id }}</td>
+              <td class="col-nombre">{{ expediente.nombre }}</td>
+              <td>
+                <span class="badge-estado" [ngClass]="{
+                  'estado-pendiente': expediente.estado === 'Pendiente',
+                  'estado-en-proceso': expediente.estado === 'En proceso',
+                  'estado-finalizado': expediente.estado === 'Finalizado'
+                }">{{ expediente.estado }}</span>
+              </td>
+              <td>
+                <span class="badge-prioridad" [ngClass]="{
+                  'prioridad-alta': expediente.prioridad === 'Alta',
+                  'prioridad-media': expediente.prioridad === 'Media',
+                  'prioridad-baja': expediente.prioridad === 'Baja'
+                }">{{ expediente.prioridad || '—' }}</span>
+              </td>
+              <td>{{ expediente.fechaVencimiento | date: 'dd/MM/yyyy' }}</td>
+              <td>
+                <span class="badge-dias" [ngClass]="{
+                  'dias-hoy': urgencia(expediente.fechaVencimiento!) === 'hoy',
+                  'dias-critico': urgencia(expediente.fechaVencimiento!) === 'critico',
+                  'dias-proximo': urgencia(expediente.fechaVencimiento!) === 'proximo'
+                }">
+                  @if (diasRestantes(expediente.fechaVencimiento!) === 0) {
+                    &#9200; Vence hoy
+                  } @else {
+                    {{ diasRestantes(expediente.fechaVencimiento!) }}
+                    día{{ diasRestantes(expediente.fechaVencimiento!) !== 1 ? 's' : '' }}
+                  }
+                </span>
+              </td>
+              <td class="acciones">
+                <button
+                  class="btn btn-accion btn-accion-detalle"
+                  [routerLink]="['/expediente', expediente.id]"
+                  title="Ver detalle"
+                >
+                  &#128065; Detalle
+                </button>
+                <button
+                  class="btn btn-accion btn-accion-editar"
+                  [routerLink]="['/expedientes/editar', expediente.id]"
+                  title="Editar"
+                >
+                  &#9998; Editar
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+
+</div>
