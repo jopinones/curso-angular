@@ -5,14 +5,44 @@ import { Expediente } from '../../models/expediente';
 import { CommonModule } from '@angular/common';
 import { ExpedienteService } from '../services/expediente';
 
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+
 @Component({
   selector: 'app-bandeja',
-  imports: [FormsModule, CommonModule, RouterLink],
+  imports: [
+    FormsModule, 
+    CommonModule, 
+    RouterLink,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatButtonModule,
+    MatTableModule
+  ],
   templateUrl: './bandeja.html',
   styleUrl: './bandeja.css',
 })
 export class Bandeja implements OnInit {
   expedientes: Expediente[] = [];
+  
+  columnas: string[] = [
+    'id',
+    'nombre',
+    'estado',
+    'prioridad',
+    'fecha',
+    'vencimiento',
+    'observación',
+    'acciones'
+  ];
+
   mostrarFormulario = false;
   formularioEnviado = false;
   alerta = { mensaje: '', visible: false };

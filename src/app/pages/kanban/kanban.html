@@ -1,0 +1,165 @@
+<div class="kanban-page">
+  <div class="kanban-header">
+    <h2 class="kanban-titulo">Tablero Kanban</h2>
+    <p class="kanban-subtitulo">Gestión visual de expedientes organizados por estado</p>
+  </div>
+
+  <div class="kanban-board">
+
+    <!-- Columna Pendiente -->
+    <div class="kanban-col">
+      <div class="col-header col-header-pendiente">
+        <span class="col-titulo">Pendiente</span>
+        <span class="col-badge badge-pendiente">{{ pendientes().length }}</span>
+      </div>
+      <div class="col-cards">
+        @for (exp of pendientes(); track exp.id) {
+          <mat-card appearance="outlined" class="kanban-card">
+            <mat-card-content>
+              <div class="card-top-row">
+                <span class="card-nombre">{{ exp.nombre }}</span>
+                <span class="card-id">#{{ exp.id }}</span>
+              </div>
+              <div class="card-meta">
+                <span [class]="'badge-prioridad prioridad-' + exp.prioridad.toLowerCase()">
+                  {{ exp.prioridad }}
+                </span>
+                <span class="card-fecha">{{ exp.fechaCreacion }}</span>
+              </div>
+              @if (exp.fechaVencimiento) {
+                <div class="card-vencimiento">
+                  <mat-icon class="venc-icon">schedule</mat-icon>
+                  Vence: {{ exp.fechaVencimiento }}
+                </div>
+              }
+            </mat-card-content>
+            <mat-divider></mat-divider>
+            <mat-card-actions class="card-actions">
+              <button mat-stroked-button class="btn-ver" [routerLink]="['/expediente', exp.id]"
+                      matTooltip="Ver detalle">
+                <mat-icon>visibility</mat-icon> Ver
+              </button>
+              <button mat-flat-button class="btn-avanzar btn-iniciar"
+                      (click)="cambiarEstado(exp, 'En Proceso')"
+                      matTooltip="Mover a En Proceso">
+                Iniciar <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        }
+        @if (pendientes().length === 0) {
+          <div class="col-vacio">
+            <mat-icon class="vacio-icon">inbox</mat-icon>
+            <p>Sin expedientes pendientes</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Columna En Proceso -->
+    <div class="kanban-col">
+      <div class="col-header col-header-proceso">
+        <span class="col-titulo">En Proceso</span>
+        <span class="col-badge badge-proceso">{{ enProceso().length }}</span>
+      </div>
+      <div class="col-cards">
+        @for (exp of enProceso(); track exp.id) {
+          <mat-card appearance="outlined" class="kanban-card">
+            <mat-card-content>
+              <div class="card-top-row">
+                <span class="card-nombre">{{ exp.nombre }}</span>
+                <span class="card-id">#{{ exp.id }}</span>
+              </div>
+              <div class="card-meta">
+                <span [class]="'badge-prioridad prioridad-' + exp.prioridad.toLowerCase()">
+                  {{ exp.prioridad }}
+                </span>
+                <span class="card-fecha">{{ exp.fechaCreacion }}</span>
+              </div>
+              @if (exp.fechaVencimiento) {
+                <div class="card-vencimiento">
+                  <mat-icon class="venc-icon">schedule</mat-icon>
+                  Vence: {{ exp.fechaVencimiento }}
+                </div>
+              }
+            </mat-card-content>
+            <mat-divider></mat-divider>
+            <mat-card-actions class="card-actions">
+              <button mat-icon-button class="btn-regresar"
+                      (click)="cambiarEstado(exp, 'Pendiente')"
+                      matTooltip="Regresar a Pendiente">
+                <mat-icon>arrow_back</mat-icon>
+              </button>
+              <button mat-stroked-button class="btn-ver" [routerLink]="['/expediente', exp.id]"
+                      matTooltip="Ver detalle">
+                <mat-icon>visibility</mat-icon> Ver
+              </button>
+              <button mat-flat-button class="btn-avanzar btn-finalizar"
+                      (click)="cambiarEstado(exp, 'Finalizado')"
+                      matTooltip="Mover a Finalizado">
+                Finalizar <mat-icon>check</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        }
+        @if (enProceso().length === 0) {
+          <div class="col-vacio">
+            <mat-icon class="vacio-icon">hourglass_empty</mat-icon>
+            <p>Sin expedientes en proceso</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Columna Finalizado -->
+    <div class="kanban-col">
+      <div class="col-header col-header-finalizado">
+        <span class="col-titulo">Finalizado</span>
+        <span class="col-badge badge-finalizado">{{ finalizados().length }}</span>
+      </div>
+      <div class="col-cards">
+        @for (exp of finalizados(); track exp.id) {
+          <mat-card appearance="outlined" class="kanban-card">
+            <mat-card-content>
+              <div class="card-top-row">
+                <span class="card-nombre">{{ exp.nombre }}</span>
+                <span class="card-id">#{{ exp.id }}</span>
+              </div>
+              <div class="card-meta">
+                <span [class]="'badge-prioridad prioridad-' + exp.prioridad.toLowerCase()">
+                  {{ exp.prioridad }}
+                </span>
+                <span class="card-fecha">{{ exp.fechaCreacion }}</span>
+              </div>
+              @if (exp.fechaVencimiento) {
+                <div class="card-vencimiento">
+                  <mat-icon class="venc-icon">schedule</mat-icon>
+                  Vence: {{ exp.fechaVencimiento }}
+                </div>
+              }
+            </mat-card-content>
+            <mat-divider></mat-divider>
+            <mat-card-actions class="card-actions">
+              <button mat-stroked-button class="btn-ver" [routerLink]="['/expediente', exp.id]"
+                      matTooltip="Ver detalle">
+                <mat-icon>visibility</mat-icon> Ver
+              </button>
+              <button mat-stroked-button class="btn-reabrir"
+                      (click)="cambiarEstado(exp, 'En Proceso')"
+                      matTooltip="Reabrir expediente">
+                <mat-icon>replay</mat-icon> Reabrir
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        }
+        @if (finalizados().length === 0) {
+          <div class="col-vacio">
+            <mat-icon class="vacio-icon">check_circle</mat-icon>
+            <p>Sin expedientes finalizados</p>
+          </div>
+        }
+      </div>
+    </div>
+
+  </div>
+</div>

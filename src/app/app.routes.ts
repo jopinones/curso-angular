@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Inicio } from './pages/inicio/inicio';
 import { Bandeja } from './bandeja/bandeja';
+import { Kanban } from './pages/kanban/kanban';
 import { Acerca } from './pages/acerca/acerca';
 import { Reportes } from './pages/reportes/reportes';
 import { DetalleExpediente } from './pages/detalle-expediente/detalle-expediente';
@@ -16,6 +17,10 @@ export const routes: Routes = [
     {
         path: 'bandeja',
         component: Bandeja
+    },
+    {
+        path: 'kanban',
+        component: Kanban
     },
     {
         path: 'pendientes',
