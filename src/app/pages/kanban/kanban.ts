@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgClass, DatePipe } from '@angular/common';
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,16 +15,11 @@ interface KanbanColumna {
   titulo: string;
   headerClass: string;
   badgeClass: string;
-  estadoAnterior?: string;
-  estadoSiguiente?: string;
-  labelAvanzar?: string;
-  iconoAvanzar?: string;
-  btnAvanzarClass?: string;
 }
 
 @Component({
   selector: 'app-kanban',
-  imports: [RouterLink, NgClass, DatePipe, MatCardModule, MatButtonModule, MatIconModule, MatTooltipModule, MatDividerModule],
+  imports: [RouterLink, NgClass, DatePipe, DragDropModule, MatCardModule, MatButtonModule, MatIconModule, MatTooltipModule, MatDividerModule],
   templateUrl: './kanban.html',
   styleUrl: './kanban.css',
 })
@@ -31,44 +27,21 @@ export class Kanban {
   private readonly service = inject(ExpedienteService);
 
   readonly columnas: KanbanColumna[] = [
-    {
-      estado: 'Pendiente',
-      titulo: 'Pendiente',
-      headerClass: 'col-header-pendiente',
-      badgeClass: 'badge-pendiente',
-      estadoSiguiente: 'En Proceso',
-      labelAvanzar: 'Iniciar',
-      iconoAvanzar: 'arrow_forward',
-      btnAvanzarClass: 'btn-iniciar',
-    },
-    {
-      estado: 'En Proceso',
-      titulo: 'En Proceso',
-      headerClass: 'col-header-proceso',
-      badgeClass: 'badge-proceso',
-      estadoAnterior: 'Pendiente',
-      estadoSiguiente: 'Finalizado',
-      labelAvanzar: 'Finalizar',
-      iconoAvanzar: 'check',
-      btnAvanzarClass: 'btn-finalizar',
-    },
-    {
-      estado: 'Finalizado',
-      titulo: 'Finalizado',
-      headerClass: 'col-header-finalizado',
-      badgeClass: 'badge-finalizado',
-      estadoAnterior: 'En Proceso',
-    },
+    { estado: 'Pendiente',  titulo: 'Pendiente',  headerClass: 'col-header-pendiente',  badgeClass: 'badge-pendiente'  },
+    { estado: 'En Proceso', titulo: 'En Proceso', headerClass: 'col-header-proceso',    badgeClass: 'badge-proceso'    },
+    { estado: 'Finalizado', titulo: 'Finalizado', headerClass: 'col-header-finalizado', badgeClass: 'badge-finalizado' },
   ];
 
   getExpedientesPorEstado(estado: string): Expediente[] {
     return this.service.expedientes().filter(e => e.estado === estado);
   }
 
-  cambiarEstado(expediente: Expediente, nuevoEstado: string): void {
-    const estadoAnterior = expediente.estado;
+  onDrop(event: CdkDragDrop<KanbanColumna>): void {
+    if (event.previousContainer === event.container) return;
+    const expediente = event.item.data as Expediente;
+    const nuevoEstado = event.container.data.estado;
     const actualizado: Expediente = { ...expediente, estado: nuevoEstado };
-    this.service.agregarHistorial(actualizado, estadoAnterior, nuevoEstado, 'Estado cambiado desde Kanban');
+    this.service.agregarHistorial(actualizado, expediente.estado, nuevoEstado, 'Estado cambiado desde Kanban');
     this.service.actualizarExpediente(actualizado);
   }
 }

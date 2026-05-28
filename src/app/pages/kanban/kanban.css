@@ -44,20 +44,9 @@
   padding: 14px 18px;
 }
 
-.col-header-pendiente {
-  background: #fef3c7;
-  border-bottom: 2px solid #fcd34d;
-}
-
-.col-header-proceso {
-  background: #dbeafe;
-  border-bottom: 2px solid #93c5fd;
-}
-
-.col-header-finalizado {
-  background: #dcfce7;
-  border-bottom: 2px solid #86efac;
-}
+.col-header-pendiente  { background: #fef3c7; border-bottom: 2px solid #fcd34d; }
+.col-header-proceso    { background: #dbeafe; border-bottom: 2px solid #93c5fd; }
+.col-header-finalizado { background: #dcfce7; border-bottom: 2px solid #86efac; }
 
 .col-titulo {
   font-size: 0.82rem;
@@ -66,8 +55,8 @@
   letter-spacing: 0.06em;
 }
 
-.col-header-pendiente .col-titulo { color: #b45309; }
-.col-header-proceso .col-titulo { color: #1d4ed8; }
+.col-header-pendiente  .col-titulo { color: #b45309; }
+.col-header-proceso    .col-titulo { color: #1d4ed8; }
 .col-header-finalizado .col-titulo { color: #15803d; }
 
 .col-badge {
@@ -78,29 +67,77 @@
   color: #fff;
 }
 
-.badge-pendiente { background: #d97706; }
-.badge-proceso { background: #2563eb; }
+.badge-pendiente  { background: #d97706; }
+.badge-proceso    { background: #2563eb; }
 .badge-finalizado { background: #15803d; }
 
-/* Cards container */
+/* Cards container (drop zone) */
 .col-cards {
   padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-height: 120px;
+  min-height: 140px;
+  transition: background 0.2s;
+}
+
+/* Drop zone: elemento entrante */
+.col-cards.cdk-drop-list-receiving {
+  background: #e0f2fe;
+  outline: 2px dashed #38bdf8;
+  outline-offset: -6px;
+  border-radius: 0 0 12px 12px;
+}
+
+/* Drop zone: mientras se arrastra desde ella */
+.col-cards.cdk-drop-list-dragging {
+  background: #f0f9ff;
 }
 
 /* Kanban Card */
 .kanban-card {
   border-radius: 10px !important;
   background: #ffffff !important;
-  transition: box-shadow 0.2s, transform 0.15s;
+  transition: box-shadow 0.2s;
 }
 
 .kanban-card:hover {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1) !important;
-  transform: translateY(-1px);
+}
+
+/* Cursor de arrastre en el área de handle */
+mat-card-content[cdkDragHandle] {
+  cursor: grab;
+}
+
+mat-card-content[cdkDragHandle]:active {
+  cursor: grabbing;
+}
+
+/* Preview flotante durante el arrastre */
+.kanban-card.cdk-drag-preview {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2) !important;
+  transform: rotate(1.5deg) scale(1.02);
+  opacity: 0.96;
+}
+
+/* Placeholder (hueco que queda en la columna origen) */
+.kanban-card.cdk-drag-placeholder {
+  opacity: 0;
+  border: 2px dashed #93c5fd !important;
+  background: #eff6ff !important;
+  box-shadow: none !important;
+  min-height: 60px;
+}
+
+/* Animación de retorno al soltar */
+.kanban-card.cdk-drag-animating {
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Reordenamiento suave dentro de la columna */
+.col-cards.cdk-drop-list-dragging .kanban-card:not(.cdk-drag-placeholder) {
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 /* Card top row */
@@ -120,10 +157,25 @@
   flex: 1;
 }
 
+.card-corner {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
 .card-id {
   font-size: 0.75rem;
   color: #94a3b8;
   white-space: nowrap;
+}
+
+.drag-icon {
+  font-size: 1rem !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  color: #cbd5e1;
+  vertical-align: middle;
 }
 
 /* Card meta row */
@@ -144,9 +196,9 @@
   white-space: nowrap;
 }
 
-.prioridad-alta { background: #dc2626; }
+.prioridad-alta  { background: #dc2626; }
 .prioridad-media { background: #d97706; }
-.prioridad-baja { background: #16a34a; }
+.prioridad-baja  { background: #16a34a; }
 
 .card-fecha {
   font-size: 0.75rem;
@@ -185,10 +237,7 @@
 /* Card actions */
 .card-actions {
   display: flex !important;
-  gap: 6px !important;
   padding: 6px 10px 10px !important;
-  flex-wrap: nowrap;
-  align-items: center;
 }
 
 .btn-ver {
@@ -204,57 +253,14 @@
   background: #eff6ff !important;
 }
 
-.btn-avanzar {
-  font-size: 0.78rem !important;
-  height: 32px !important;
-  line-height: 32px !important;
-  padding: 0 10px !important;
-  margin-left: auto !important;
-}
-
-.btn-iniciar {
-  background: #2563eb !important;
-  color: #fff !important;
-}
-
-.btn-iniciar:hover {
-  background: #1d4ed8 !important;
-}
-
-.btn-finalizar {
-  background: #15803d !important;
-  color: #fff !important;
-}
-
-.btn-finalizar:hover {
-  background: #166534 !important;
-}
-
-.btn-regresar {
-  color: #94a3b8 !important;
-  width: 32px !important;
-  height: 32px !important;
-}
-
-.btn-reabrir {
-  font-size: 0.78rem !important;
-  height: 32px !important;
-  line-height: 32px !important;
-  padding: 0 10px !important;
-  color: #64748b !important;
-  border-color: #cbd5e1 !important;
-  margin-left: auto !important;
-}
-
-.btn-reabrir:hover {
-  background: #f1f5f9 !important;
-}
-
 /* Empty state */
 .col-vacio {
   text-align: center;
   padding: 36px 16px;
   color: #cbd5e1;
+  border: 2px dashed #e2e8f0;
+  border-radius: 8px;
+  margin: 4px 0;
 }
 
 .vacio-icon {

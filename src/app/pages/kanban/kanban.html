@@ -1,10 +1,10 @@
 <div class="kanban-page">
   <div class="kanban-header">
     <h2 class="kanban-titulo">Tablero Kanban</h2>
-    <p class="kanban-subtitulo">Gestión visual de expedientes organizados por estado</p>
+    <p class="kanban-subtitulo">Arrastra las tarjetas entre columnas para cambiar el estado del expediente</p>
   </div>
 
-  <div class="kanban-board">
+  <div class="kanban-board" cdkDropListGroup>
 
     @for (col of columnas; track col.estado) {
       <div class="kanban-col">
@@ -17,16 +17,23 @@
           </span>
         </div>
 
-        <!-- Tarjetas -->
-        <div class="col-cards">
-          @for (exp of getExpedientesPorEstado(col.estado); track exp.id) {
-            <mat-card appearance="outlined" class="kanban-card">
-              <mat-card-content>
+        <!-- Zona de drop -->
+        <div class="col-cards"
+             cdkDropList
+             [cdkDropListData]="col"
+             (cdkDropListDropped)="onDrop($event)">
 
-                <!-- Nombre e ID -->
+          @for (exp of getExpedientesPorEstado(col.estado); track exp.id) {
+            <mat-card cdkDrag [cdkDragData]="exp" appearance="outlined" class="kanban-card">
+
+              <!-- Área de arrastre (todo el contenido salvo acciones) -->
+              <mat-card-content cdkDragHandle>
                 <div class="card-top-row">
                   <span class="card-nombre">{{ exp.nombre }}</span>
-                  <span class="card-id">#{{ exp.id }}</span>
+                  <div class="card-corner">
+                    <span class="card-id">#{{ exp.id }}</span>
+                    <mat-icon class="drag-icon">drag_indicator</mat-icon>
+                  </div>
                 </div>
 
                 <!-- Prioridad y fecha de creación -->
@@ -49,58 +56,30 @@
                     Vence: {{ exp.fechaVencimiento | date:'dd/MM/yyyy':'UTC' }}
                   </div>
                 }
-
               </mat-card-content>
+
               <mat-divider></mat-divider>
+
+              <!-- Acción: solo navegar al detalle -->
               <mat-card-actions class="card-actions">
-
-                <!-- Botón regresar al estado anterior -->
-                @if (col.estadoAnterior) {
-                  <button mat-icon-button class="btn-regresar"
-                          (click)="cambiarEstado(exp, col.estadoAnterior)"
-                          [matTooltip]="'Regresar a ' + col.estadoAnterior">
-                    <mat-icon>arrow_back</mat-icon>
-                  </button>
-                }
-
-                <!-- Ver detalle -->
                 <button mat-stroked-button class="btn-ver"
                         [routerLink]="['/expediente', exp.id]"
-                        matTooltip="Ver detalle">
-                  <mat-icon>visibility</mat-icon> Ver
+                        matTooltip="Ver detalle del expediente">
+                  <mat-icon>visibility</mat-icon> Ver detalle
                 </button>
-
-                <!-- Botón avanzar al estado siguiente -->
-                @if (col.estadoSiguiente && col.labelAvanzar && col.iconoAvanzar) {
-                  <button mat-flat-button
-                          [ngClass]="['btn-avanzar', col.btnAvanzarClass ?? '']"
-                          (click)="cambiarEstado(exp, col.estadoSiguiente)"
-                          [matTooltip]="'Mover a ' + col.estadoSiguiente">
-                    {{ col.labelAvanzar }} <mat-icon>{{ col.iconoAvanzar }}</mat-icon>
-                  </button>
-                }
-
-                <!-- Reabrir solo en Finalizado -->
-                @if (!col.estadoSiguiente && col.estadoAnterior) {
-                  <button mat-stroked-button class="btn-reabrir"
-                          (click)="cambiarEstado(exp, col.estadoAnterior)"
-                          matTooltip="Reabrir expediente">
-                    <mat-icon>replay</mat-icon> Reabrir
-                  </button>
-                }
-
               </mat-card-actions>
+
             </mat-card>
           }
 
           @if (getExpedientesPorEstado(col.estado).length === 0) {
             <div class="col-vacio">
-              <mat-icon class="vacio-icon">inbox</mat-icon>
-              <p>Sin expedientes en esta columna</p>
+              <mat-icon class="vacio-icon">drag_indicator</mat-icon>
+              <p>Arrastra aquí un expediente</p>
             </div>
           }
-        </div>
 
+        </div>
       </div>
     }
 
