@@ -1,5 +1,6 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ExpedienteService } from '../../services/expediente';
+import { Expediente } from '../../../models/expediente';
 
 @Component({
   selector: 'app-reportes',
@@ -7,17 +8,19 @@ import { ExpedienteService } from '../../services/expediente';
   templateUrl: './reportes.html',
   styleUrl: './reportes.css',
 })
-export class Reportes {
+export class Reportes implements OnInit {
   private readonly service = inject(ExpedienteService);
 
-  readonly totalRegistrado = computed(() => this.service.expedientes().length);
-  readonly pendienteDeGestion = computed(() =>
-    this.service.expedientes().filter(e => e.estado === 'Pendiente').length,
-  );
-  readonly enProceso = computed(() =>
-    this.service.expedientes().filter(e => e.estado === 'En proceso').length,
-  );
-  readonly procesoTerminado = computed(() =>
-    this.service.expedientes().filter(e => e.estado === 'Finalizado').length,
-  );
+  private readonly _expedientes = signal<Expediente[]>([]);
+
+  ngOnInit(): void {
+    this.service.obtenerExpedientes().subscribe({
+      next: data => this._expedientes.set(data),
+    });
+  }
+
+  readonly totalRegistrado    = computed(() => this._expedientes().length);
+  readonly pendienteDeGestion = computed(() => this._expedientes().filter(e => e.estado === 'Pendiente').length);
+  readonly enProceso          = computed(() => this._expedientes().filter(e => e.estado === 'En proceso').length);
+  readonly procesoTerminado   = computed(() => this._expedientes().filter(e => e.estado === 'Finalizado').length);
 }

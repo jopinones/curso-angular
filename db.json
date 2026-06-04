@@ -1,0 +1,188 @@
+{
+  "expedientes": [
+    {
+      "id": "1",
+      "nombre": "Fiscalización Tributaria - Empresa XYZ S.A.",
+      "estado": "En proceso",
+      "prioridad": "Alta",
+      "fechaCreacion": "2026-04-10",
+      "fechaVencimiento": "2026-06-15",
+      "observaciones": "Revisión de declaraciones de IVA 2023-2024. Contribuyente notificado.",
+      "historial": [
+        {
+          "fecha": "2026-04-10",
+          "estadoAnterior": "Pendiente",
+          "estadoNuevo": "En proceso",
+          "observacion": "Asignado al inspector Rodríguez para inicio de revisión documental."
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "nombre": "Revisión Contrato Concesión Vial Norte",
+      "estado": "Pendiente",
+      "prioridad": "Alta",
+      "fechaCreacion": "2026-05-02",
+      "fechaVencimiento": "2026-06-08",
+      "observaciones": "Contrato vence en 90 días. Requiere dictamen jurídico previo a renovación.",
+      "historial": []
+    },
+    {
+      "id": "3",
+      "nombre": "Solicitud Permiso Construcción - Av. Central 450",
+      "estado": "Finalizado",
+      "prioridad": "Media",
+      "fechaCreacion": "2026-03-15",
+      "fechaVencimiento": "2026-05-20",
+      "observaciones": "Planos aprobados. Permiso emitido con número 2026-PC-0341.",
+      "historial": [
+        {
+          "fecha": "2026-03-20",
+          "estadoAnterior": "Pendiente",
+          "estadoNuevo": "En proceso",
+          "observacion": "Documentación recibida y asignada a revisión técnica."
+        },
+        {
+          "fecha": "2026-04-30",
+          "estadoAnterior": "En proceso",
+          "estadoNuevo": "Finalizado",
+          "observacion": "Inspección aprobada. Permiso generado y entregado al solicitante."
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "nombre": "Auditoría Interna - Área de Adquisiciones Q1",
+      "estado": "En proceso",
+      "prioridad": "Media",
+      "fechaCreacion": "2026-05-05",
+      "fechaVencimiento": "2026-07-01",
+      "observaciones": "Revisión de licitaciones del primer trimestre 2026. Sin observaciones graves hasta ahora.",
+      "historial": [
+        {
+          "fecha": "2026-05-08",
+          "estadoAnterior": "Pendiente",
+          "estadoNuevo": "En proceso",
+          "observacion": "Inicio formal de auditoría. Equipo auditor conformado."
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "nombre": "Reclamo Ciudadano - Daños Infraestructura Calle 7",
+      "estado": "Pendiente",
+      "prioridad": "Baja",
+      "fechaCreacion": "2026-05-20",
+      "fechaVencimiento": null,
+      "observaciones": "Ciudadano reporta baches y falta de iluminación. Pendiente visita técnica.",
+      "historial": []
+    },
+    {
+      "id": "6",
+      "nombre": "Renovación Licencia Ambiental - Planta Industrial Sur",
+      "estado": "Finalizado",
+      "prioridad": "Alta",
+      "fechaCreacion": "2026-02-01",
+      "fechaVencimiento": "2026-04-30",
+      "observaciones": "Licencia renovada por 3 años. Se exige informe semestral de emisiones.",
+      "historial": [
+        {
+          "fecha": "2026-02-10",
+          "estadoAnterior": "Pendiente",
+          "estadoNuevo": "En proceso",
+          "observacion": "Solicitud admitida. Inicio de evaluación de impacto ambiental."
+        },
+        {
+          "fecha": "2026-03-25",
+          "estadoAnterior": "En proceso",
+          "estadoNuevo": "Finalizado",
+          "observacion": "Evaluación completada con resultado favorable. Licencia emitida."
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "nombre": "Investigación Disciplinaria - Personal Administrativo",
+      "estado": "Finalizado",
+      "prioridad": "Alta",
+      "fechaCreacion": "2026-05-12",
+      "fechaVencimiento": "2026-06-30",
+      "observaciones": "Tres funcionarios involucrados. Etapa de recepción de descargos.",
+      "historial": [
+        {
+          "fecha": "2026-05-14",
+          "estadoAnterior": "Pendiente",
+          "estadoNuevo": "En proceso",
+          "observacion": "Expediente aperturado por la Unidad de Control Disciplinario."
+        },
+        {
+          "fecha": "2026-06-04",
+          "estadoAnterior": "En proceso",
+          "estadoNuevo": "Finalizado",
+          "observacion": "Estado cambiado desde Kanban"
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "nombre": "Regularización Catastral - Sector Residencial Poniente",
+      "estado": "Pendiente",
+      "prioridad": "Media",
+      "fechaCreacion": "2026-05-28",
+      "fechaVencimiento": "2026-08-15",
+      "observaciones": "47 predios sin actualización catastral desde 2019. Requiere levantamiento en terreno.",
+      "historial": []
+    },
+    {
+      "id": "9",
+      "nombre": "Licitación Pública - Equipamiento Hospital Regional",
+      "estado": "Finalizado",
+      "prioridad": "Alta",
+      "fechaCreacion": "2026-01-15",
+      "fechaVencimiento": "2026-03-31",
+      "observaciones": "Adjudicado a MedEquip Ltda. por $48.500.000. Contrato firmado.",
+      "historial": [
+        {
+          "fecha": "2026-01-20",
+          "estadoAnterior": "Pendiente",
+          "estadoNuevo": "En proceso",
+          "observacion": "Bases publicadas. Período de consultas abierto."
+        },
+        {
+          "fecha": "2026-02-28",
+          "estadoAnterior": "En proceso",
+          "estadoNuevo": "Finalizado",
+          "observacion": "Propuestas evaluadas. Acta de adjudicación firmada y notificada."
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "nombre": "Tramitación Subsidio Habitacional - Familia Méndez",
+      "estado": "Pendiente",
+      "prioridad": "Baja",
+      "fechaCreacion": "2026-06-01",
+      "fechaVencimiento": null,
+      "observaciones": "Documentación incompleta. Se notificó al solicitante para subsanación.",
+      "historial": []
+    },
+    {
+      "id": "Wn2EMoq6oGQ",
+      "nombre": "PACA",
+      "estado": "En proceso",
+      "prioridad": "Baja",
+      "fechaCreacion": "2026-06-04",
+      "fechaVencimiento": "2026-06-09",
+      "observaciones": "nota de prueba",
+      "historial": [
+        {
+          "fecha": "2026-06-04",
+          "estadoAnterior": "Pendiente",
+          "estadoNuevo": "En proceso",
+          "observacion": "Estado cambiado desde Kanban"
+        }
+      ]
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

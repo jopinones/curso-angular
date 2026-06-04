@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Expediente } from '../../models/expediente';
@@ -30,7 +30,7 @@ import { MatTableModule } from '@angular/material/table';
   styleUrl: './bandeja.css',
 })
 export class Bandeja implements OnInit {
-  expedientes: Expediente[] = [];
+  readonly expedientes = signal<Expediente[]>([]);
   
   columnas: string[] = [
     'id',
@@ -64,7 +64,7 @@ export class Bandeja implements OnInit {
     historial: [],
   };
 
-  constructor(private expedienteService: ExpedienteService) {}
+  private readonly expedienteService = inject(ExpedienteService);
 
   ngOnInit() {
     this.cargarExpediente();
@@ -84,28 +84,41 @@ export class Bandeja implements OnInit {
   }
 
   cambiarEstado(id: number) {
-    const expediente = this.expedientes.find(e => e.id === id);
+    const expediente = this.expedientes().find(e => e.id === id);
     if (!expediente) return;
     const estadoAnterior = expediente.estado;
     const indiceActual = this.flujoEstados.indexOf(expediente.estado);
-    expediente.estado = this.flujoEstados[(indiceActual + 1) % this.flujoEstados.length];
+    const actualizado: Expediente = {
+      ...expediente,
+      estado: this.flujoEstados[(indiceActual + 1) % this.flujoEstados.length],
+    };
     this.expedienteService.agregarHistorial(
-      expediente,
+      actualizado,
       estadoAnterior,
-      expediente.estado,
-      `Avance de estado registrado automáticamente`,
+      actualizado.estado,
+      'Avance de estado registrado automáticamente',
     );
-    this.expedienteService.actualizarExpediente(expediente);
-    this.cargarExpediente();
+    this.expedienteService.actualizarExpediente(actualizado).subscribe({
+      next: () => this.cargarExpediente(),
+      error: () => this.mostrarAlerta('Error al actualizar el estado.'),
+    });
   }
 
   cargarExpediente() {
-    this.expedientes = this.expedienteService.obtenerExpediente();
+    this.expedienteService.obtenerExpedientes().subscribe({
+      next: data => this.expedientes.set(data),
+      error: () => this.mostrarAlerta('Error al cargar los expedientes.'),
+    });
   }
 
   agregarExpediente() {
     this.formularioEnviado = true;
-    if (!this.nuevoExpediente.nombre || !this.nuevoExpediente.estado || !this.nuevoExpediente.prioridad || !this.nuevoExpediente.fechaCreacion) {
+    if (
+      !this.nuevoExpediente.nombre ||
+      !this.nuevoExpediente.estado ||
+      !this.nuevoExpediente.prioridad ||
+      !this.nuevoExpediente.fechaCreacion
+    ) {
       this.mostrarAlerta('Complete todos los campos obligatorios antes de agregar.');
       return;
     }
@@ -121,17 +134,23 @@ export class Bandeja implements OnInit {
       historial: this.nuevoExpediente.historial,
     };
 
-    this.expedienteService.agregarExpediente(expediente);
-    this.cargarExpediente();
-    this.limpiarFormulario();
-    this.mostrarFormulario = false;
+    this.expedienteService.agregarExpediente(expediente).subscribe({
+      next: () => {
+        this.cargarExpediente();
+        this.limpiarFormulario();
+        this.mostrarFormulario = false;
+      },
+      error: () => this.mostrarAlerta('Error al agregar el expediente.'),
+    });
   }
 
   eliminarExpediente(id: number) {
     const confirmar = confirm('¿Está seguro de eliminar el expediente?');
     if (!confirmar) return;
-    this.expedienteService.eliminarExpediente(id);
-    this.cargarExpediente();
+    this.expedienteService.eliminarExpediente(id).subscribe({
+      next: () => this.cargarExpediente(),
+      error: () => this.mostrarAlerta('Error al eliminar el expediente.'),
+    });
   }
 
   limpiarFormulario() {
@@ -160,7 +179,7 @@ export class Bandeja implements OnInit {
   }
 
   obtenerExpedienteFiltrados() {
-    return this.expedientes.filter(expediente => {
+    return this.expedientes().filter(expediente => {
       const cumpleEstado = !this.filtroEstado || expediente.estado === this.filtroEstado;
       const cumplePrioridad = !this.filtroPrioridad || expediente.prioridad === this.filtroPrioridad;
       const cumpleVencimiento =

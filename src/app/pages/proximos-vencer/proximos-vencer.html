@@ -6,12 +6,12 @@
       <p class="pv-subtitulo">Expedientes con fecha de vencimiento en los próximos 7 días</p>
     </div>
     <span class="badge-contador">
-      {{ expedientes.length }} expediente{{ expedientes.length !== 1 ? 's' : '' }}
+      {{ expedientes().length }} expediente{{ expedientes().length !== 1 ? 's' : '' }}
     </span>
   </div>
 
   <div class="tabla-contenedor">
-    @if (expedientes.length === 0) {
+    @if (expedientes().length === 0) {
       <div class="vacio">
         <span class="vacio-icono">&#10003;</span>
         <p>No hay expedientes próximos a vencer en los próximos 7 días.</p>
@@ -30,7 +30,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (expediente of expedientes; track expediente.id) {
+          @for (expediente of expedientes(); track expediente.id) {
             <tr [ngClass]="{
               'fila-hoy': urgencia(expediente.fechaVencimiento!) === 'hoy',
               'fila-critico': urgencia(expediente.fechaVencimiento!) === 'critico'

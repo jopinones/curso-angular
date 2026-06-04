@@ -1,59 +1,37 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Expediente, HistorialEntry } from '../../models/expediente';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExpedienteService {
-  private readonly storageKey = 'expediente';
-  private readonly _expedientes = signal<Expediente[]>(this.cargarDesdeStorage());
+  private readonly apiUrl = 'http://localhost:3000/expedientes';
 
-  readonly expedientes = this._expedientes.asReadonly();
+  constructor(private http: HttpClient) {}
 
-  private cargarDesdeStorage(): Expediente[] {
-    const data = localStorage.getItem(this.storageKey);
-    if (data) {
-      // normaliza registros viejos que no tengan historial
-      return (JSON.parse(data) as Expediente[]).map(e => ({
-        ...e,
-        historial: e.historial ?? [],
-      }));
-    }
-
-    const iniciales: Expediente[] = [
-      { id: 1, nombre: 'Fiscalización', estado: 'Pendiente', prioridad: 'Alta', fechaCreacion: '2026-05-02', historial: [] },
-      { id: 2, nombre: 'Revisión', estado: 'Pendiente', prioridad: 'Media', fechaCreacion: '2026-05-04', historial: [] },
-    ];
-    this.guardarExpedientes(iniciales);
-    return iniciales;
+  obtenerExpedientes(): Observable<Expediente[]> {
+    return this.http
+      .get<Expediente[]>(this.apiUrl)
+      .pipe(map(items => items.map(e => ({ ...e, historial: e.historial ?? [] }))));
   }
 
-  obtenerExpediente(): Expediente[] {
-    return this._expedientes();
+  obtenerPorId(id: number): Observable<Expediente> {
+    return this.http.get<Expediente>(`${this.apiUrl}/${id}`);
   }
 
-  obtenerPorId(id: number): Expediente | undefined {
-    return this._expedientes().find(e => e.id === id);
+  agregarExpediente(expediente: Expediente): Observable<Expediente> {
+    return this.http.post<Expediente>(this.apiUrl, expediente);
   }
 
-  agregarExpediente(expediente: Expediente): void {
-    const actualizados = [...this._expedientes(), expediente];
-    this._expedientes.set(actualizados);
-    this.guardarExpedientes(actualizados);
+  eliminarExpediente(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  eliminarExpediente(id: number): void {
-    const actualizados = this._expedientes().filter(e => e.id !== id);
-    this._expedientes.set(actualizados);
-    this.guardarExpedientes(actualizados);
-  }
-
-  actualizarExpediente(expedienteActualizado: Expediente): void {
-    const actualizados = this._expedientes().map(e =>
-      e.id === expedienteActualizado.id ? expedienteActualizado : e,
-    );
-    this._expedientes.set(actualizados);
-    this.guardarExpedientes(actualizados);
+  actualizarExpediente(expediente: Expediente): Observable<Expediente> {
+    return this.http.put<Expediente>(`${this.apiUrl}/${expediente.id}`, expediente);
   }
 
   agregarHistorial(
@@ -70,21 +48,5 @@ export class ExpedienteService {
     };
     if (!expediente.historial) expediente.historial = [];
     expediente.historial.push(entrada);
-  }
-
-  contarTotal(): number {
-    return this._expedientes().length;
-  }
-
-  contarPendientes(): number {
-    return this._expedientes().filter(e => e.estado === 'Pendiente').length;
-  }
-
-  contarFinalizado(): number {
-    return this._expedientes().filter(e => e.estado === 'Finalizado').length;
-  }
-
-  private guardarExpedientes(expedientes: Expediente[]): void {
-    localStorage.setItem(this.storageKey, JSON.stringify(expedientes));
   }
 }

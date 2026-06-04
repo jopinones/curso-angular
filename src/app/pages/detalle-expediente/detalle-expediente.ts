@@ -1,7 +1,8 @@
-import { Component, computed, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePipe, NgClass } from '@angular/common';
 import { ExpedienteService } from '../../services/expediente';
+import { Expediente } from '../../../models/expediente';
 
 @Component({
   selector: 'app-detalle-expediente',
@@ -13,14 +14,14 @@ export class DetalleExpediente implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly expedienteService = inject(ExpedienteService);
 
-  private readonly idExpediente = signal(0);
-
-  readonly expediente = computed(() =>
-    this.expedienteService.expedientes().find(e => e.id === this.idExpediente()),
-  );
+  expediente: Expediente | undefined = undefined;
 
   ngOnInit(): void {
-    this.idExpediente.set(Number(this.route.snapshot.paramMap.get('id')));
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.expedienteService.obtenerPorId(id).subscribe({
+      next: exp => (this.expediente = { ...exp, historial: exp.historial ?? [] }),
+      error: () => (this.expediente = undefined),
+    });
   }
 
   obtenerClasePrioridad(prioridad: string): string {

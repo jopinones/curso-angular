@@ -24,11 +24,15 @@ export class EditarExpediente implements OnInit {
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    const exp = this.expedienteService.obtenerPorId(id);
-    if (exp) {
-      this.expediente = { ...exp };
-      this.encontrado = true;
-    }
+    this.expedienteService.obtenerPorId(id).subscribe({
+      next: exp => {
+        this.expediente = { ...exp, historial: exp.historial ?? [] };
+        this.encontrado = true;
+      },
+      error: () => {
+        this.alerta = { mensaje: 'No se encontró el expediente.', tipo: 'error' };
+      },
+    });
   }
 
   guardar() {
@@ -37,8 +41,10 @@ export class EditarExpediente implements OnInit {
       this.alerta = { mensaje: 'Complete todos los campos obligatorios.', tipo: 'error' };
       return;
     }
-    this.expedienteService.actualizarExpediente(this.expediente);
-    this.router.navigate(['/bandeja']);
+    this.expedienteService.actualizarExpediente(this.expediente).subscribe({
+      next: () => this.router.navigate(['/bandeja']),
+      error: () => (this.alerta = { mensaje: 'Error al guardar los cambios.', tipo: 'error' }),
+    });
   }
 
   cancelar() {

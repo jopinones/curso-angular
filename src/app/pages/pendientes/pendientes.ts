@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Expediente } from '../../../models/expediente';
@@ -11,11 +11,13 @@ import { ExpedienteService } from '../../services/expediente';
   styleUrl: './pendientes.css',
 })
 export class Pendientes implements OnInit {
-  expedientes: Expediente[] = [];
+  private readonly expedienteService = inject(ExpedienteService);
 
-  constructor(private expedienteService: ExpedienteService) {}
+  readonly expedientes = signal<Expediente[]>([]);
 
   ngOnInit(): void {
-    this.expedientes = this.expedienteService.obtenerExpediente().filter(e => e.estado === 'Pendiente');
+    this.expedienteService.obtenerExpedientes().subscribe({
+      next: data => this.expedientes.set(data.filter(e => e.estado === 'Pendiente')),
+    });
   }
 }

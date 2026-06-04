@@ -16,40 +16,6 @@
   </div>
 
   @if (mostrarFormulario) {
-
-    <mat-card class="card-formulairo">
-      <mat-card-content>
-        <div class="formulario">
-          <mat-select [(ngModel)]="nuevoExpediente.prioridad">
-            <mat-option value="Alta">Alta</mat-option>
-            <mat-option value="Media">Media</mat-option>
-            <mat-option value="Baja">Baja</mat-option>
-          </mat-select>
-
-          <button
-            ma>
-
-          </button>
-
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-
-
-    <div class="filtros">
-      <mat-form-field appearance="outline">
-        <mat-select>
-          <mat-option value="">Selecciones un estado</mat-option>
-          <mat-option value="Pendiente">Pendiente</mat-option>
-          <mat-option value="En proceso">En proceso</mat-option>
-          <mat-option value="Finalizado">Finalizado</mat-option>
-
-        </mat-select>
-      </mat-form-field>
-
-    </div>
-    <!--
     <div class="formulario-panel">
       <h2 class="form-titulo">Nuevo Expediente</h2>
       <div class="form-grid">
@@ -85,13 +51,20 @@
         </div>
 
         <div class="form-field">
-          <label class="form-label">Prioridad</label>
-          <select class="form-select" [(ngModel)]="nuevoExpediente.prioridad">
+          <label class="form-label">Prioridad <span class="requerido">*</span></label>
+          <select
+            class="form-select"
+            [(ngModel)]="nuevoExpediente.prioridad"
+            [class.campo-invalido]="formularioEnviado && !nuevoExpediente.prioridad"
+          >
             <option value="">Sin prioridad</option>
             <option value="Alta">Alta</option>
             <option value="Media">Media</option>
             <option value="Baja">Baja</option>
           </select>
+          @if (formularioEnviado && !nuevoExpediente.prioridad) {
+            <span class="msg-error">Seleccione una prioridad.</span>
+          }
         </div>
 
         <div class="form-field">
@@ -132,11 +105,10 @@
         <button class="btn btn-primario" (click)="agregarExpediente()">Guardar expediente</button>
       </div>
     </div>
-  -->    
   }
 
   <div class="tabla-contenedor">
-    @if (expedientes.length === 0) {
+    @if (expedientes().length === 0) {
       <div class="vacio">
         <span class="vacio-icono">&#128193;</span>
         <p>No hay expedientes. Cree uno usando el botón de arriba.</p>
@@ -174,7 +146,7 @@
         </div>
       </div>
 
-      @if (expedientes.length === 0) {
+      @if (expedientes().length === 0) {
         <div class="vacio">
           <span class="vacio-icono">&#128193;</span>
           <p>No hay expedientes. Cree uno usando el botón de arriba.</p>

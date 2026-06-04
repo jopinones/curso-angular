@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Expediente } from '../../../models/expediente';
@@ -11,20 +11,25 @@ import { ExpedienteService } from '../../services/expediente';
   styleUrl: './proximos-vencer.css',
 })
 export class ProximosVencer implements OnInit {
-  expedientes: Expediente[] = [];
+  private readonly expedienteService = inject(ExpedienteService);
 
-  constructor(private expedienteService: ExpedienteService) {}
+  readonly expedientes = signal<Expediente[]>([]);
 
   ngOnInit(): void {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
     const limite = new Date(hoy.getTime() + 7 * 24 * 60 * 60 * 1000);
 
-    this.expedientes = this.expedienteService.obtenerExpediente().filter(e => {
-      if (!e.fechaVencimiento) return false;
-      const [y, m, d] = e.fechaVencimiento.split('-').map(Number);
-      const venc = new Date(y, m - 1, d);
-      return venc >= hoy && venc <= limite;
+    this.expedienteService.obtenerExpedientes().subscribe({
+      next: data =>
+        this.expedientes.set(
+          data.filter(e => {
+            if (!e.fechaVencimiento) return false;
+            const [y, m, d] = e.fechaVencimiento.split('-').map(Number);
+            const venc = new Date(y, m - 1, d);
+            return venc >= hoy && venc <= limite;
+          }),
+        ),
     });
   }
 
